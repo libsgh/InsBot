@@ -25,6 +25,7 @@ $$('.search').on('click', function (e) {
 					'	<div class="mdui-card">'+
 					'		<div class="mdui-card-header">'+
 					'    		<img class="mdui-card-header-avatar" src="/ins/download/'+item.pic_url+'"/>'+
+					'  				<button class="mdui-btn mdui-btn-icon mdui-btn-dense mdui-color-theme-accent mdui-ripple mdui-float-right" onclick="downloadMedia(this)"><i class="mdui-icon material-icons">file_download</i></button>'+
 					'    		<div class="mdui-card-header-title">'+item.username+'</div>'+
 					'    		<div class="mdui-card-header-subtitle">'+item.fullname+'</div>'+
 					'  		</div>'+
@@ -47,9 +48,9 @@ $$('.search').on('click', function (e) {
 					'			<div class="swiper-button-prev"></div>'+
 					'			<div class="swiper-pagination"></div>'+
 					'			</div>'+
-				    '<div class="mdui-card-menu">'+
+				    /*'<div class="mdui-card-menu">'+
 				    '  <button class="mdui-btn mdui-btn-icon mdui-btn-dense mdui-color-theme-accent mdui-ripple" onclick="downloadMedia(this)"><i class="mdui-icon material-icons">file_download</i></button>'+
-				    '</div>'+
+				    '</div>'+*/
 					/*'			<div class="mdui-card-actions"><div class="mdui-center">';
 					html+='				<select class="mdui-select">';
 					$$.each(item.nodes,function(i, u){
