@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>#(data.ui.full_name)(@#(data.ui.username)) · InsBot</title>
+
+		<meta name="description" content="responsive photo gallery using colorbox" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+		<!-- bootstrap & fontawesome -->
+		<link rel="stylesheet" href="#(ctx)/assets/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="#(ctx)/assets/font-awesome/4.5.0/css/font-awesome.min.css" />
+
+		<!-- page specific plugin styles -->
+		<link rel="stylesheet" href="#(ctx)/assets/css/colorbox.min.css" />
+
+		<!-- text fonts -->
+		<link rel="stylesheet" href="#(ctx)/assets/css/fonts.googleapis.com.css" />
+
+		<!-- ace styles -->
+		<link rel="stylesheet" href="#(ctx)/assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+
+		<!--[if lte IE 9]>
+			<link rel="stylesheet" href="#(ctx)/assets/css/ace-part2.min.css" class="ace-main-stylesheet" />
+		<![endif]-->
+		<link rel="stylesheet" href="#(ctx)/assets/css/ace-skins.min.css" />
+		<link rel="stylesheet" href="#(ctx)/assets/css/ace-rtl.min.css" />
+
+		<!--[if lte IE 9]>
+		  <link rel="stylesheet" href="#(ctx)/assets/css/ace-ie.min.css" />
+		<![endif]-->
+
+		<!-- inline styles related to this page -->
+
+		<!-- ace settings handler -->
+		<script src="#(ctx)/assets/js/ace-extra.min.js"></script>
+
+		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+
+		<!--[if lte IE 8]>
+		<script src="#(ctx)/assets/js/html5shiv.min.js"></script>
+		<script src="#(ctx)/assets/js/respond.min.js"></script>
+		<![endif]-->
+		<link rel="shortcut icon" href=" #(ctx)/img/favicon.ico" />
+		<style type="text/css">
+		.no-skin {
+			  background: url('#(ctx)/img/boxed-bg.png') repeat fixed;
+		}
+		</style>
+	</head>
+
+	<body class="no-skin">
+		<div class="main-container ace-save-state container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.loadState('main-container')}catch(e){}
+			</script>
+
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="page-content">
+						
+						<div class="row">
+							<!-- <div class="col-xs-12 col-sm-3"></div> -->
+							<div class="col-xs-12 col-sm-3 center">
+								<span class="profile-picture">
+									<img class="editable img-responsive" alt="Alex's Avatar" id="avatar2" src="#(data.ui.profile_pic_url_hd)" height="200" width="200" />
+								</span>
+							</div><!-- /.col -->
+							<div class="col-xs-12 col-sm-9">
+							
+								<h4 class="blue">
+									<span class="middle">#(data.ui.username)</span>
+									#if(data.ui.is_verified)
+										<span class="label label-purple arrowed-in-right">
+											<i class="ace-icon fa fa-circle smaller-80 align-middle"></i>
+											已认证
+										</span>
+									#end
+								</h4>
+
+								<div class="profile-user-info">
+									<div class="profile-info-row">
+										<div class="profile-info-name"> 全名 </div>
+
+										<div class="profile-info-value">
+											<span>#(data.ui.full_name)</span>
+										</div>
+									</div>
+
+									<div class="profile-info-row">
+										<div class="profile-info-name"> 个人简介 </div>
+
+										<div class="profile-info-value">
+											<!-- <i class="fa fa-map-marker light-orange bigger-110"></i> -->
+											<span>#(data.ui.biography)</span>
+										</div>
+									</div>
+
+									<div class="profile-info-row">
+										<div class="profile-info-name"> 帖子数 </div>
+
+										<div class="profile-info-value">
+											<span>#(data.ui.tiez)</span>
+										</div>
+									</div>
+
+									<div class="profile-info-row">
+										<div class="profile-info-name"> 粉丝数 </div>
+
+										<div class="profile-info-value">
+											<span>#(data.ui.edge_followed_by)</span>
+										</div>
+									</div>
+
+									<div class="profile-info-row">
+										<div class="profile-info-name"> 正在关注 </div>
+
+										<div class="profile-info-value">
+											<span>#(data.ui.edge_follow)</span>
+										</div>
+									</div>
+								</div>
+							</div><!-- /.col -->
+							<!-- <div class="col-xs-12 col-sm-3"></div> -->
+						</div><!-- /.row -->
+						
+						<div class="hr dotted"></div>
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<div>
+									<ul class="ace-thumbnails">
+										#for(x : data.nodes)
+										<li>
+											<a href="#(x.display_url)" data-rel="colorbox">
+												<img width="293" height="293" alt="293x293" src="#(x.display_url)" />
+												<div class="text">
+													<div class="inner">点击查看</div>
+												</div>
+											</a>
+											#if(x.is_video)
+												<div class="tags">
+													<span class="label-holder">
+														<span class="label label-info arrowed">video</span>
+														<!-- <i class="ace-icon fa fa-video-camera" aria-hidden="true"></i> -->
+													</span>
+												</div>
+											#end
+											<div class="tools tools-top">
+												<a href="#"  class="copy" data-clipboard-text="#(x.display_url)">
+													<i class="ace-icon fa fa-link"></i>
+												</a>
+												<a href="#(x.display_url)" title="下载原图" download="">
+													<i class="ace-icon fa fa-download blue"></i>
+												</a>
+											</div>
+										</li>
+										#end
+									</ul>
+									<div id="jiazai" style="position:fixed;bottom:0;left:0;width:100%;line-height:20px;font-size:16px;color:#fff;text-align:center;display:none;"><i class="ace-icon fa fa-spinner fa-spin orange bigger-125"></i></div>
+								</div><!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div>
+			</div><!-- /.main-content -->
+			<div class="footer">
+				<div class="footer-inner">
+					<div class="footer-content">
+						<span class="bigger-120">
+							<span class="blue bolder">InsBot</span>
+							Libs &copy; 2018
+						</span>
+						&nbsp; &nbsp;
+						<span class="action-buttons">
+							<a href="https://github.com/libsgh/InsBot" target="_blank">
+								<i class="ace-icon fa fa-github-square light-blue bigger-150"></i>
+							</a>
+						</span>
+					</div>
+				</div>
+			</div>
+
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="ace-icon fa fa-angle-double-up icon-only bigger-150"></i>
+			</a>
+		</div><!-- /.main-container -->
+		
+		<!-- basic scripts -->
+
+		<!--[if !IE]> -->
+		<script src="#(ctx)/assets/js/jquery-2.1.4.min.js"></script>
+
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+<script src="#(ctx)/assets/js/jquery-1.11.3.min.js"></script>
+<![endif]-->
+		<script type="text/javascript">
+			if('ontouchstart' in document.documentElement) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+		</script>
+		<script src="#(ctx)/assets/js/bootstrap.min.js"></script>
+
+		<!-- page specific plugin scripts -->
+		<script src="#(ctx)/assets/js/jquery.colorbox.min.js"></script>
+
+		<!-- ace scripts -->
+		<script src="#(ctx)/assets/js/ace-elements.min.js"></script>
+		<script src="#(ctx)/assets/js/ace.min.js"></script>
+		<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+		<script src="https://cdn.bootcss.com/tooltipster/3.3.0/js/jquery.tooltipster.min.js"></script>
+		<link href="https://cdn.bootcss.com/tooltipster/3.3.0/css/tooltipster.min.css" rel="stylesheet">
+		<!-- inline scripts related to this page -->
+		<script type="text/javascript">
+			var end_cursor = '#(data.end_cursor)';
+			jQuery(function($) {
+				var $overflow = '';
+				var colorbox_params = {
+					rel: 'colorbox',
+					reposition:true,
+					scalePhotos:true,
+					scrolling:false,
+					previous:'<i class="ace-icon fa fa-arrow-left"></i>',
+					next:'<i class="ace-icon fa fa-arrow-right"></i>',
+					close:'&times;',
+					current:'{current} of {total}',
+					maxWidth:'100%',
+					maxHeight:'100%',
+					onOpen:function(){
+						$overflow = document.body.style.overflow;
+						document.body.style.overflow = 'hidden';
+					},
+					onClosed:function(){
+						document.body.style.overflow = $overflow;
+					},
+					onComplete:function(){
+						$.colorbox.resize();
+					}
+				};
+			
+				$('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
+				$("#cboxLoadingGraphic").html("<i class='ace-icon fa fa-spinner orange fa-spin'></i>");//let's add a custom loading icon
+				
+				
+				$(document).one('ajaxloadstart.page', function(e) {
+					$('#colorbox, #cboxOverlay').remove();
+			   });
+				/* $(".copy").tooltipster({
+					   animation: 'grow',			
+					   timer: 400,
+					   trigger: 'click',
+					   content: '已复制到剪切板',
+					   side: 'right'
+				}); */
+				var clipboard = new Clipboard('.copy');
+			})
+			 //滚动到页面底部时，自动加载更多  
+		    $(window).scroll(function(){                
+		        var scrollh = $(document).height();  
+		        var scrollTop=Math.max(document.documentElement.scrollTop||document.body.scrollTop);  
+		        if((scrollTop + $(window).height()) >= scrollh){  
+		            $("#jiazai").show();  
+		            var interval = setTimeout(function(){  
+		                $("#jiazai").hide();  
+		            },1000);  
+		            var inter = setTimeout(function(){
+		            	$.get("#(ctx)/loadMore?username=#(data.ui.username)&end_cursor="+end_cursor+"&uid=#(data.ui.id)", function(data){
+							end_cursor = data.end_cursor;
+							if(data.has_next_page){
+								$("#loadMore").show();
+							}else{
+								$("#loadMore").hide();
+							}
+							 $.each(data.nodes, function (index, node) {
+								 var html = '<li>';
+								 html += '<a href="'+ node.display_url+'" data-rel="colorbox">';
+								 html += '<img width="293" height="293" alt="293x293" src="'+ node.display_url+'" />';
+								 html += '	<div class="text">';
+								 html += '		<div class="inner">点击查看</div>';
+								 html += '	</div>';
+								 html += '</a>';
+								 html += '<div class="tools tools-bottom">';
+								 html += '	<a href="#" title="复制下载地址">';
+								 html += '		<i class="ace-icon fa fa-link"></i>';
+								 html += '	</a>';
+								 html += '	<a href="'+ node.display_url+'" title="下载原图" download="">';
+								 html += '		<i class="ace-icon fa fa-download blue"></i>';
+								 html += '	</a>';
+								 html += '</div>';
+								 html += '</li>';
+								$(".ace-thumbnails").append(html);
+							 });
+						});
+		            },1000);   
+		        }  
+		    });  
+		</script>
+	</body>
+</html>

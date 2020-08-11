@@ -1,0 +1,16 @@
+download:
+  path: /app #/app
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+  mvc:
+    servlet:
+      load-on-startup: 1
+  task:
+    scheduling:
+      pool:
+        size: 20
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: info

@@ -1,0 +1,192 @@
+#define ins()
+	<!DOCTYPE html>
+	<html>
+	<head>
+	  <meta charset="utf-8">
+	  <meta name="viewport" content="width=device-width">
+	  <title>#if(ui.full_name=="")@#(ui.username)#else#(ui.full_name)(@#(ui.username))#end · InsBox 照片视频下载</title>
+	  <link href="//cdn.bootcss.com/mdui/0.4.3/css/mdui.min.css" rel="stylesheet">
+	  <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/libsgh/InsBot@master/src/main/resources/static/img/favicon.ico" />
+	  <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/libsgh/InsBot@master/src/main/resources/static/css/lightslider.min.css" />                  
+	</head>
+	<body>
+	<div class="mdui-drawer mdui-drawer-close" id="main-drawer">
+		<ul class="mdui-list">
+		#for(u : unlist)
+		  <li class="mdui-list-item mdui-ripple #if(u.username == ui.username) mdui-list-item-active #else #end" onclick="javascript:location.href='/#(u.username)'">
+		    <div class="mdui-list-item-avatar"><img src="#(u.profile_pic_url_hd)"/></div>
+		    <div class="mdui-list-item-content">
+		      <div class="mdui-list-item-title">#(u.username)</div>
+		      <div class="mdui-list-item-text mdui-list-item-one-line">#(u.lastTimeF)</div>
+		    </div>
+		  </li>
+		  #end
+		</ul>
+	</div>
+	<div class="mdui-container">
+		<div class="mdui-row">
+  			<div class="mdui-col-md-9 mdui-col-offset-md-1 mdui-col-sm-9 mdui-col-offset-sm-1">
+  				<div class="mdui-card">
+				  <!-- 卡片的标题和副标题 -->
+				  <div class="mdui-card-primary">
+					  <div class="mdui-row">
+				  		#if(isMobile) 
+				  		#else
+			  			<button class="mdui-btn mdui-btn-icon"  style="float: right;" title="下载全部" onclick="downloadAll('#(ui.username)')"><i class="mdui-icon material-icons">file_download</i></button>
+					  	<a href="javascript:;" style="float: right;" class ="mdui-btn mdui-btn-icon" title="缓存列表" mdui-drawer="{target: '#main-drawer', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+				  		#end
+					  	<div class="mdui-col-sm-5 mdui-col-md-4">
+					  		#if(isMobile) 
+				  			<button class="mdui-btn mdui-btn-icon"  style="float: right;" title="下载全部" onclick="downloadAll('#(ui.username)')"><i class="mdui-icon material-icons">file_download</i></button>
+						  	<a href="javascript:;" style="float: right;" class ="mdui-btn mdui-btn-icon" title="缓存列表" mdui-drawer="{target: '#main-drawer', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+					  		#else
+					  		#end
+						    <img class="mdui-img-circle mdui-valign" src="#(ui.profile_pic_url_hd)" #if(isMobile) height="80px" width="80px" #else height="120px" width="120px" #end onclick="javascript:location.href='https://www.instagram.com/#(ui.username)'" />
+					  	</div>
+					  	<div class="mdui-col-sm-6 mdui-col-md-8">
+					  		<div class="mdui-typo">
+							  <h2 class="mdui-text-color-blue-900">#(ui.username)
+							   #if(ui.is_verified)
+									<i class="mdui-icon material-icons" title="已验证">check_circle</i>
+								#end
+							  </h2>
+							  <div class="mdui-row-xs-4 mdui-hidden-sm-down">
+							  	<div class="mdui-col">
+								  <h5>#(ui.tiez) 帖子</h5>
+							  	</div>
+							  	<div class="mdui-col">
+								  <h5>#(ui.edge_followed_by) 粉丝</h5>
+							  	</div>
+							  	<div class="mdui-col">
+								  <h5>正在关注 #(ui.edge_follow)</h5>
+							  	</div>
+							  </div>
+							  <div class="mdui-row-xs-4 mdui-hidden-md-up">
+							  	<div class="mdui-col">
+								  <h5>#(ui.tiez)</h5>
+								  <h5>帖子</h5>
+							  	</div>
+							  	<div class="mdui-col">
+								  <h5>#(ui.edge_followed_by)</h5>
+								  <h5>粉丝</h5>
+							  	</div>
+							  	<div class="mdui-col">
+								  <h5>#(ui.edge_follow)</h5>
+								  <h5>正在关注</h5>
+							  	</div>
+							  </div>
+							</div>
+					  	</div>
+					  </div>
+				  </div>
+				  <!-- 卡片的内容 -->
+				  <div class="mdui-card-content">
+				  	<div class="mdui-row">
+					  <div class="mdui-col-md-4">
+					  	<p style="font-weight:600;">#(ui.full_name)</p>
+						  	<p>#(ui.biography)</p>
+						  	<a href="#(ui.external_url)" target="_blank" style="font-weight:600;text-decoration:none;">#(ui.external_url)</a>
+					  </div>
+					  <div class="mdui-col-md-8">
+					  	<!-- <div class="mdui-row-xs-5 mdui-row-xl-7 mdui-grid-list">
+						  	 #for(reel : ui.reels)
+							  <div class="mdui-col">
+							    <div class="mdui-grid-tile">
+								  <img class="mdui-img-circle" src="#(reel.cover_media_thumbnail)" onclick="javascript:location.href='https://www.instagram.com/stories/highlights/#(reel.id)'" />
+							    </div>
+							    <div style="text-align: center;">#(reel.title)</div>
+							  </div>
+						  	 #end
+						</div> -->
+						<ul id="lightSlider">
+							#for(reel : ui.reels)
+							  <li>
+							  	  <div class="mdui-center mdui-hidden-sm-down" style="width: 77px; height: 77px;">
+								      <img class="mdui-img-circle" src="#(reel.cover_media_thumbnail)" style="width: 100%;height: 100%" onclick="javascript:location.href='https://www.instagram.com/stories/highlights/#(reel.id)'" />
+							  	  </div>
+							  	  <div class="mdui-center mdui-hidden-md-up" style="width: 56px; height: 56px;">
+								      <img class="mdui-img-circle" src="#(reel.cover_media_thumbnail)" style="width: 100%;height: 100%" onclick="javascript:location.href='https://www.instagram.com/stories/highlights/#(reel.id)'" />
+							  	  </div>
+							  	  <p style="text-align:center;font-weight: 600">#(reel.title)</p>
+							  </li>
+							#end
+						</ul>
+					  </div>
+					</div>
+				  </div>
+				</div>
+				<div id="cards" class="mdui-row-xs-1 mdui-row-sm-1 mdui-row-md-3 mdui-row-lg-3 mdui-row-xl-3 mdui-grid-list mdui-row-gapless">
+				  #for(x : ud)
+				  <div class="mdui-col">
+					  <div class="mdui-grid-tile mdui-card mdui-hoverable">
+				        <div class="mdui-card-media" #if(isMobile) #else style="height: 312px" #end>
+					        #if(x.is_video)
+					        	<input type="hidden" class="html5lightbox" data-group="gallery_#(x.id)" href="#(x.video_url)" />
+					        	<a class="html5lightbox" data-group="gallery_#(x.id)" href="#(x.video_url)">
+									<video class="mdui-video-fluid" style="height: 100%;width: 100%" webkit-playsinline playsinline controls poster="#(x.srcs.get(4).src)">
+									  <source src="#(x.video_url)" type="video/mp4">
+									</video>
+					        	</a>
+					          	<div class="mdui-card-menu">
+					            	<button class="mdui-btn mdui-btn-icon mdui-text-color-white" #if(isMobile) #else onclick="downloadFiles(this)" #end><i class="mdui-icon material-icons">videocam</i></button>
+					          	</div>
+							#else
+							  <a class="html5lightbox" data-group="gallery_#(x.id)" href="#(x.display_url)">
+							  <input type="hidden" class="html5lightbox" data-group="gallery_#(x.id)" href="#(x.display_url)" />
+							  <img decoding="auto" srcset="#(x.srcset)" /></a>
+							  #if(x.children)
+							  	 #for(c : x.children)
+							  	  #if(c.is_video)
+									  <input type="hidden" class="html5lightbox" data-group="gallery_#(x.id)" href="#(c.video_url)" />
+							  	  #else
+									  <input type="hidden" class="html5lightbox" data-group="gallery_#(x.id)" href="#(c.display_url)" />
+							  	  #end
+							  	 #end
+						         <div class="mdui-card-menu">
+						            <button class="mdui-btn mdui-btn-icon mdui-text-color-white" #if(isMobile) #else onclick="downloadFiles(this)" #end><i class="mdui-icon material-icons">photo_library</i></button>
+						         </div>
+						         #else
+						         <div class="mdui-card-menu">
+							        <button class="mdui-btn mdui-btn-icon mdui-text-color-white" #if(isMobile) #else onclick="downloadFiles(this)" #end>><i class="mdui-icon material-icons">insert_photo</i></button>
+						         </div>
+							  #end
+							#end
+							<!-- <div class="mdui-card-media-covered mdui-card-media-covered-gradient mdui-card-media-covered-top" style="display: none">
+						      <div class="mdui-card-primary">
+						        <i class="mdui-icon material-icons mdui-text-color-white">favorite</i> #(x.likeCount)
+						        <i class="mdui-icon material-icons mdui-text-color-white">chat_bubble</i> #(x.commentCount)
+						      </div>
+						    </div> -->
+				        </div>
+				        <div class="mdui-card-content" title="#(x.text)" data-clipboard-text="#(x.text)"><p class="mdui-text-truncate mdui-float-left" style="max-width: 160px;">#(x.text)</p><p class="mdui-float-right mdui-text-color-black-disabled">#(x.timeF)</p></div>
+				      </div>
+				  </div>
+				  #end
+				  <!-- <div id="jiazai" style="position:fixed;bottom:0;left:0;width:100%;line-height:20px;font-size:16px;color:#fff;text-align:center;display:none;">
+				  	<div class="mdui-spinner mdui-spinner-colorful"></div>
+				  </div> -->
+				</div>
+  			</div>
+  		</div>
+	</div>
+	<a href="javascript:loadMore('#(ui.id)',#(isMobile));" data-device = "#(isMobile)" data-id="#(ui.id)" class="loadMore mdui-fab mdui-fab-fixed mdui-ripple mdui-color-indigo" title="加载更多"><i class="mdui-icon material-icons">expand_more</i></a>
+	<script src="//cdn.bootcss.com/mdui/0.4.3/js/mdui.min.js"></script>
+	<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdn.bootcss.com/clipboard.js/2.0.4/clipboard.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/libsgh/InsBot@master/src/main/resources/static/html5lightbox/html5lightbox.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/libsgh/InsBot@master/src/main/resources/static/js/download.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/libsgh/InsBot@master/src/main/resources/static/js/main.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/libsgh/InsBot@master/src/main/resources/static/js/lightslider.min.js"></script>
+	<!-- <script src="#(ctx)/js/main.js"></script> -->
+	</body>
+	<script type="text/javascript">
+	  $(document).ready(function() {
+	    $("#lightSlider").lightSlider({
+	    	item: 5,
+	    	loop:true
+	    }); 
+	  });
+	</script>
+	</html>
+#end
+#compress('ins')

@@ -1,0 +1,103 @@
+@charset "UTF-8";
+body{
+    padding:0;
+    margin:0;
+    font:small arial,sans-serif;
+    font-size:16px;
+    text-align:center;
+}
+#mngb{
+    position: absolute;
+    width: 100%;
+    top:15px;
+}
+#gb_2{
+    width: 285px;
+    position: relative;
+    padding-left:30px ;
+    padding-right: 15px;
+    float: right;
+    display: flex;
+}
+.icon{
+    padding-right: 10px;
+    padding-left: 10px;
+}
+a{
+    text-decoration:none;
+}
+#lga{
+    margin-top:80px;
+    height: 231px;
+    text-align: center;
+}
+#lga img{
+    margin-top: 80px;
+   width: 272px;
+   height: 93px;
+}
+#lga #logo-sub{
+    color: #4285f4;
+    left:79px;
+    position: relative;
+    /*top:-20px;*/
+    /*width: 0;*/
+}
+form{
+    height: 30px;
+}
+.fkbx{
+    width:670px;/*注意这里会用自适应*/
+    display: inline-block;
+    background-color: #fff;
+    border: 1px solid rgb(185,185,185);/*它的输入框居然是一个div，并不是一个实际的输入框*/
+    border-radius: 1px;
+    font: 18px arial,sans-serif;
+    height: 36px;
+    line-height: 36px;
+    position: relative;
+}
+.fkbx input{
+    background: transparent;
+    border:none;
+    bottom: 0;
+    box-sizing: border-box;
+    left: 0;
+    margin: 0;
+    position: absolute;
+    top:2px;
+    width: 100%;
+}
+.mv-hide{
+    margin-top:63px;
+}
+#mv-tittle{
+    text-align: start;
+    overflow: hidden;
+    position: relative;
+    margin: 0 auto;
+    height: 292px;
+    /*line-height: 292px;*/
+    width:688px;   /*自适应会调整*/
+}
+#mv-single{
+    border:none;
+    height: 100%;
+    width: 100%;
+}
+@media screen and (max-width: 872px) {
+    .fkbx{
+        width: 498px;
+    }
+    #mv-tittle{
+        width: 516px;
+    }
+}
+@media only screen and (max-width: 700px){
+    .fkbx{
+        width: 326px;
+    }
+    #mv-tittle{
+        width: 344px;
+    }
+}

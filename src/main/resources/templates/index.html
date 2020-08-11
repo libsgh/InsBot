@@ -1,0 +1,76 @@
+#define index()
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>InsBox 照片视频下载</title>
+<link href="//cdn.bootcss.com/mdui/0.4.3/css/mdui.min.css"
+	rel="stylesheet">
+<link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/libsgh/InsBot@master/src/main/resources/static/img/favicon.ico" />
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+</head>
+<body>
+	<div class="mdui-drawer" id="main-drawer">
+		<ul class="mdui-list">
+		#for(u : unlist)
+		  <li class="mdui-list-item mdui-ripple" onclick="javascript:location.href='/#(u.username)'">
+		    <div class="mdui-list-item-avatar"><img src="#(u.profile_pic_url_hd)"/></div>
+		    <div class="mdui-list-item-content">
+		      <div class="mdui-list-item-title">#(u.username)</div>
+		      <div class="mdui-list-item-text mdui-list-item-one-line">#(u.lastTimeF)</div>
+		    </div>
+		  </li>
+		  #end
+		</ul>
+	</div>
+	<div class="mdui-container">
+		<div class="mdui-row">
+			<div class="mdui-col-xs-10 mdui-textfield mdui-textfield-floating-label">
+				<i class="mdui-icon material-icons">insert_link</i>
+				<label class="mdui-textfield-label">从instagram复制链接</label>
+				<textarea id="url" class="mdui-textfield-input" type="text"></textarea>
+				<div class="mdui-textfield-helper">多个链接换行输入</div></div>
+			<div class="mdui-col-xs-2">
+				<br>
+				<br>
+				<button id="delete" class="mdui-fab mdui-fab-mini mdui-ripple" title="清空输入">
+					<i class="mdui-icon material-icons">delete</i></button>
+			</div>
+		</div>
+		<div class="mdui-row">
+			<button class="mdui-center mdui-btn mdui-btn-raised mdui-ripple mdui-color-pink-accent search">
+				<i class="mdui-icon material-icons">search</i>获取资源
+			</button>
+			<a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#main-drawer', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+		</div>
+		<div id="cards" class="mdui-row-xs-1 mdui-row-lg-2">
+			<div class="mdui-panel" mdui-panel>
+				<div class="mdui-panel-item mdui-panel-item-open">
+					<div class="mdui-panel-item-header">
+						<div class="mdui-chip">
+							<span class="mdui-chip-icon mdui-color-blue">
+								<i class="mdui-icon material-icons">face</i></span>
+							<span class="mdui-chip-title">使用教程</span></div>
+					</div>
+					<div class="mdui-panel-item-body">
+						<p>1. 复制图片或视频链接</p>
+						<br>
+						<img class="mdui-img-fluid" src="https://cdn.jsdelivr.net/gh/libsgh/InsBot/src/main/resources/static/img/1.png" />
+						<br>
+						<p>2. 打开浏览器复制打开链接
+							<a href="https://insbox.herokuapp.com">https://insbox.herokuapp.com/</a></p>
+						<br>
+						<p>3. 输入地址并获取资源</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<script src="//cdn.bootcss.com/mdui/0.4.3/js/mdui.min.js"></script>
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/libsgh/InsBot@master/src/main/resources/static/js/search.js"></script>
+</body>
+</html>
+#end
+#compress("index")

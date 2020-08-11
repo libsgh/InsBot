@@ -1,0 +1,57 @@
+#define task()
+	<!DOCTYPE html>
+	<html>
+	<head>
+	  <meta charset="utf-8">
+	  <meta name="viewport" content="width=device-width">
+	  <title>同步任务 · InsBox 照片视频下载</title>
+	  <link href="//cdn.bootcss.com/mdui/0.4.3/css/mdui.min.css" rel="stylesheet">
+	  <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/libsgh/InsBot@master/src/main/resources/static/img/favicon.ico" />
+	</head>
+	<body>
+	<div class="mdui-container">
+		<div class="mdui-table-fluid">
+		  <table class="mdui-table mdui-table-hoverable">
+		   	<thead>
+		      <tr>
+		        <th>ig用户</th>
+		        <th>帖子总数</th>
+		        <th>已缓存</th>
+		        <th>待缓存</th>
+		        <th>失效</th>
+		        <th>定时刷新</th>
+		        <th>缓存进度</th>
+		        <th>上一次更新</th>
+		      </tr>
+		    </thead>
+		    <tbody>
+		      #for(u : unlist)
+		      	<tr>
+			        <td>
+				        <div class="mdui-chip">
+						  <img class="mdui-chip-icon" src="#(u.headImg)"/>
+						  <span class="mdui-chip-title">#(u.username)</span>
+						</div>
+					</td>
+			        <td>#(u.total)</td>
+			        <td>#(u.ghCdnCount)</td>
+			        <td>#(u.sourceCount)</td>
+			        <td>#(u.validCdnCount)</td>
+			        <td>#(u.crCount)</td>
+			        <td>
+				        <div class="mdui-progress">
+						  <div class="mdui-progress-determinate #if(u.percent == '100%') mdui-color-green #else #end" style="width: #(u.percent)" title="#(u.percent)"></div>
+						</div>
+					</td>
+			        <td>#(u.lastTimeF)</td>
+			      </tr>
+		      #end
+		    </tbody>
+		  </table>
+		</div>
+	</div>
+	<script src="//cdn.bootcss.com/mdui/0.4.3/js/mdui.min.js"></script>
+	</body>
+	</html>
+#end
+#compress('task')
