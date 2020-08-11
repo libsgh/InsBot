@@ -7,7 +7,6 @@ function loadMore(id, isMobile){
 	 $.each(data, function (index, x) {
 	   var  html = "<div class=\"mdui-col\"> "+
 		 "   <div class=\"mdui-grid-tile mdui-card mdui-hoverable\"> ";
-	   console.log(isMobile);
 		 if(isMobile == false){
 			 html+= "    <div class=\"mdui-card-media\" style=\"height: 312px\">";
 		 }else{
@@ -185,44 +184,10 @@ function timeago(dateTimeStamp){
     }
     return result;
 }
-/*$(window).bind("scroll", function () {
-    if(getScrollHeight() == getDocumentTop() + getWindowHeight()){
-        //当滚动条到底时,触发内容
-    	loadMore($$(".loadMore").attr("data-id"));
-    	alert("到底部了");
-    }
-});*/
-function getDocumentTop() {
-    var scrollTop =  0, bodyScrollTop = 0, documentScrollTop = 0;
-    if (document.body) {
-        bodyScrollTop = document.body.scrollTop;
-    }
-    if (document.documentElement) {
-        documentScrollTop = document.documentElement.scrollTop;
-    }
-    scrollTop = (bodyScrollTop - documentScrollTop > 0) ? bodyScrollTop : documentScrollTop;
-    return scrollTop;
-}
-function getWindowHeight() {
-    var windowHeight = 0;
-    if (document.compatMode == "CSS1Compat") {
-        windowHeight = document.documentElement.clientHeight;
-    } else {
-        windowHeight = document.body.clientHeight;
-    }
-    return windowHeight;
-}
-function getScrollHeight() {
-    var scrollHeight = 0, bodyScrollHeight = 0, documentScrollHeight = 0;
-    if (document.body) {
-        bodyScrollHeight = document.body.scrollHeight;
-    }
-    if (document.documentElement) {
-        documentScrollHeight = document.documentElement.scrollHeight;
-    }
-    scrollHeight = (bodyScrollHeight - documentScrollHeight > 0) ? bodyScrollHeight : documentScrollHeight;
-    return scrollHeight;
-}
 clipboard.on('success', function(e) {
 	mdui.snackbar({message: '已复制到剪切板'});
+});
+$('#go-to-top').on('click',function () {
+	$("html, body").animate({ scrollTop: 0 }, "slow");
+	return false;
 });
