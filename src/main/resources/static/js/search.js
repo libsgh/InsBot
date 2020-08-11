@@ -79,13 +79,10 @@ $$('.search').on('click', function (e) {
 	});
 });
 function downloadMedia(obj){
-	var ddo = $$(obj).parent().parent().children('.swiper-container').children('.swiper-wrapper').children('.swiper-slide-active');
+	var ddo = $$(obj).parent().parent().children('.mdui-card-media').children('.swiper-container').children('.swiper-wrapper').children('.swiper-slide-active');
 	if(ddo.html().indexOf('img') != -1){
 		window.location.href = ddo.children('img').attr('src');
 	}else{
 		window.location.href = ddo.children('video').children('source').attr('src');
 	}
-}
-function downloadVideo(url){
-	window.location.href = url;
 }
