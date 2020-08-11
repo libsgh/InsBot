@@ -162,7 +162,7 @@ public class IndexController {
 		}else{
 			UserInfo ui = template.findOne(new Query(Criteria.where("username").is(username)), UserInfo.class, "InsUserList");
 			template.remove(new Query(Criteria.where("userId").is(ui.getId())), "InsUserData");
-			template.remove(new Query(Criteria.where("username").is(username)), "InsUserList");
+			template.remove(new Query(Criteria.where("_id").is(username)), "InsUserList");
 		}
 		return "机器人已经开始工作，请稍等一会儿刷新页面查看";
 	}
