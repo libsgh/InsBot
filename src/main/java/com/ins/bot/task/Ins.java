@@ -378,10 +378,13 @@ public class Ins{
 	}
 	
 	private String getCoverMediaThumbnail(UserInfo oui, String id) {
-		for (Reel reel : oui.getReels()) {
-			if(reel.getId().equals(id)) {
-				return reel.getCover_media_thumbnail();
+		try {
+			for (Reel reel : oui.getReels()) {
+				if(reel.getId().equals(id)) {
+					return reel.getCover_media_thumbnail();
+				}
 			}
+		} catch (Exception e) {
 		}
 		return null;
 	}
