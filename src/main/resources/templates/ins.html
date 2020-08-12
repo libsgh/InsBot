@@ -41,7 +41,7 @@
 						  	<a href="javascript:;" style="float: right;" class ="mdui-btn mdui-btn-icon" title="缓存列表" mdui-drawer="{target: '#main-drawer', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
 					  		#else
 					  		#end
-						    <img class="mdui-img-circle mdui-valign" src="#(ui.profile_pic_url_hd)" #if(isMobile) height="80px" width="80px" #else height="120px" width="120px" #end onclick="javascript:location.href='https://www.instagram.com/#(ui.username)'" />
+						    <img class="mdui-img-circle mdui-valign" src="#(ui.profile_pic_url_hd)" #if(isMobile) height="80px" width="80px" #else height="120px" width="120px" #end onclick="javascript:window.open('https://www.instagram.com/#(ui.username)')" />
 					  	</div>
 					  	<div class="mdui-col-sm-6 mdui-col-md-8">
 					  		<div class="mdui-typo">
