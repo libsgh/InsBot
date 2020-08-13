@@ -617,7 +617,7 @@ public class Ins{
 					}
 					node.setChildren(cr);
 				}
-				node.setSoureType("ins");
+				node.setSoureType(type.equals("cronRefresh")?"cronRefresh":"ins");
 				template.save(node, "InsUserData");
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
