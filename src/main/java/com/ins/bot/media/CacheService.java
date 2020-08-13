@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -112,7 +113,7 @@ public class CacheService {
 			try {
 				// 1. 先查询所有源图、源视频地址的节点数据
 				// 2. 遍历所有node循环进行cdn缓存地址替换
-				Query query = new Query(Criteria.where("soureType").is("ins")).limit(5);
+				Query query = new Query(Criteria.where("soureType").is("ins")).limit(5).with(Sort.by(Sort.Order.desc("timestamp")));
 				List<Node> ud = template.find(query, Node.class, "InsUserData");
 				for (Node node : ud) {
 					node.setSoureType("gh_cdn");
