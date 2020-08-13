@@ -67,6 +67,7 @@ public class CacheService {
 			File file = new File(localPath+File.separator+username+File.separator+filename);
 			HttpUtil.downloadFile(mediaUrl, file);
 			String url = githubUploader.upload(file, username+"/"+SecureUtil.md5(file)+ "." + extName, username);
+			System.out.println(file.getName()+",文件大小："+FileUtil.size(file)); 
 			if(FileUtil.size(file) > 20971520 && FileUtil.size(file) < 41943040) {
 				//由于jsdelivr限制 如果文件大于20M这里返回github地址
 				url = url.replaceAll("@", "/").replaceAll("https://cdn.jsdelivr.net/gh", "https://raw.githubusercontent.com");
