@@ -6,7 +6,7 @@
      opacity: 0 !important;
 }
 .custom-button-next {
-  		background: url(/img/icon.png) no-repeat;
+  		background: url(http://insbox.herokuapp.com/img/icon.png) no-repeat;
 	background-position: -162px -98px;
  			position: absolute;
     top: 50%;
