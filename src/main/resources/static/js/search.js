@@ -1,4 +1,14 @@
 var $$ = mdui.JQ;
+function toBigImg() {
+    $$(".opacityBottom").addClass("opacityBottom");//添加遮罩层
+    $$(".opacityBottom").show();
+    $$("html,body").addClass("none-scroll");//下层不可滑动
+    $$(".bigImg").addClass("bigImg");//添加图片样式
+    $$(".opacityBottom").on('click',function () {//点击关闭
+	    $$("html,body").removeClass("none-scroll");
+	    $$(".opacityBottom").remove();
+	});
+}
 $$('#delete').on('click', function (e) {
 	$$('#url').val("");
 	var input = document.getElementById("url");
@@ -44,8 +54,8 @@ $$('.search').on('click', function (e) {
 						html+='</div>';
 					});
 					html+='				</div>'+
-					'			<div class="swiper-button-next"></div>'+
-					'			<div class="swiper-button-prev"></div>'+
+					'			<div class="custom-button-next"></div>'+
+					'			<div class="custom-button-prev"></div>'+
 					'			<div class="swiper-pagination"></div>'+
 					'			</div>'+
 				    /*'<div class="mdui-card-menu">'+
@@ -73,6 +83,12 @@ $$('.search').on('click', function (e) {
 			        el: '.swiper-pagination',
 			      },
 			 });
+			 $$('img').on('click', function () {
+			    var imgsrc = $$(this).attr("src");
+			    var opacityBottom = '<div class="opacityBottom" style = "display:none"><img class="bigImg" src="' + imgsrc + '"></div>';
+			    $$(document.body).append(opacityBottom);
+			    toBigImg();//变大函数
+			});
 		  }
 	});
 });
