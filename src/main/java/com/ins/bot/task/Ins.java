@@ -99,7 +99,6 @@ public class Ins{
 			return;
 		}
 		UserInfo ui = getUserInfo(document, username);
-		logger.info(JSONUtil.toJsonPrettyStr(ui));
 		template.save(ui, "InsUserList");
 		String hash = ui.getQuery_hash();
 		MediaVariables mv = m != null?m:new MediaVariables(ui.getId());
