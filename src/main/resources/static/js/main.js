@@ -29,7 +29,7 @@ function loadMore(id, isMobile){
 			 html+="    <a class=\"html5lightbox\" data-group=\"gallery_"+x.id+"\" href=\""+x.display_url+"\"> <img decoding=\"auto\" srcset=\""+x.srcset+"\" /></a>";
 			 html+="    <input type=\"hidden\" class=\"html5lightbox\" data-group=\"gallery_"+x.id+"\" href=\""+x.display_url+"\" />";
 			 if(x.children){
-				 $.each(x.children.edges, function (index, c) {
+				 $.each(x.children, function (index, c) {
 					 if(c.is_video){
 						 html+="     <input type=\"hidden\" class=\"html5lightbox\" data-group=\"gallery_"+x.id+"\" href=\""+c.video_url+"\" /> ";
 					 }else{

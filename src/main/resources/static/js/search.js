@@ -65,14 +65,12 @@ $$('.search').on('click', function (e) {
 					$$("#cards").append(html);
 			 });
 			 new Swiper('.swiper-container', {
-			      navigation: {
-			        nextEl: '.swiper-button-next',
-			        prevEl: '.swiper-button-prev',
-			        hideOnClick: true,
-			      },
+				  navigation: {
+				        prevEl: '.custom-button-prev',
+				        nextEl: '.custom-button-next',
+				  },
 			      pagination: {
 			        el: '.swiper-pagination',
-			        hideOnClick: true,
 			      },
 			 });
 		  }
