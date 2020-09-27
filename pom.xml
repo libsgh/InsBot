@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.3.1.RELEASE</version>
+		<version>2.3.4.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -44,11 +44,6 @@
 		    <artifactId>jsoup</artifactId>
 		    <version>1.12.1</version>
 		</dependency>
-		<!-- <dependency>
-		    <groupId>com.alibaba</groupId>
-		    <artifactId>fastjson</artifactId>
-		    <version>1.2.72</version>
-		</dependency> -->
 		<dependency>
 		    <groupId>com.jfinal</groupId>
 		    <artifactId>enjoy</artifactId>
@@ -79,17 +74,21 @@
 		    <version>1.115</version>
 		</dependency>
 		<dependency>
-		  <groupId>com.github.pengrad</groupId>
-		  <artifactId>java-telegram-bot-api</artifactId>
-		  <version>4.9.0</version>
-		</dependency>
+            <groupId>ove</groupId>
+            <artifactId>ove.blake2b</artifactId>
+            <scope>system</scope>
+            <version>alpha.0</version>
+            <systemPath>${project.basedir}/src/main/resources/libs/ove.blake2b-alpha.0.jar</systemPath>
+        </dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+                    <includeSystemScope>true</includeSystemScope>
+                </configuration>
 			</plugin>
 		</plugins>
 	</build>

@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -353,6 +354,19 @@ public class IndexController {
 		}
 		model.addAttribute("unlist", rs);
 		return "tasks";
+	}
+	
+	/**
+	 * 手动登录刷新缓存
+	 * @param model
+	 * @return
+	 * @throws GeneralSecurityException 
+	 */
+	@RequestMapping("/refreshCookie")
+	@ResponseBody
+	public String refreshCookie() throws GeneralSecurityException {
+		ins.refreshCookie();
+		return "success";
 	}
 	
 }

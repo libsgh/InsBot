@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ import com.ins.bot.bean.Reel;
 import com.ins.bot.bean.ThumbnailResources;
 import com.ins.bot.bean.UserInfo;
 import com.ins.bot.common.CompressKit;
+import com.ins.bot.common.InstagramAes;
 import com.ins.bot.media.CacheService;
 
 import cn.hutool.core.io.FileUtil;
@@ -47,6 +49,7 @@ import cn.hutool.core.util.URLUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
@@ -73,8 +76,13 @@ public class Ins{
 	@Autowired
 	private CacheService cacheService;
 	
-	@Value("${COOKIE}")
 	private String cookie;
+	
+	@Value("${IG_USER_NAME}")
+	private String igUserName;
+	
+	@Value("${IG_USER_PASSWORD}")
+	private String igUserPassword;
 	
 	@Value("${GITHUB_ACCESS_TOKEN}")
 	private String accessToken;
@@ -256,7 +264,7 @@ public class Ins{
 		return null;
 	}
 	
-	private UserInfo getUserInfo(Document doc, String username) {
+	public UserInfo getUserInfo(Document doc, String username) {
 		UserInfo oui = template.findOne(new Query(Criteria.where("username").is(username)), UserInfo.class, "InsUserList");
 		Elements scripts = doc.select("script");
 		for (Element script : scripts) {
@@ -623,5 +631,41 @@ public class Ins{
 			}
 		}
 	}
-	
+	public void refreshCookie() throws GeneralSecurityException {
+		HttpResponse firstResponse = HttpRequest.get("https://www.instagram.com/").execute();
+		  System.out.println(firstResponse.getCookieStr());
+		  String configBody = firstResponse.body();
+		  String configJson = StrUtil.subBetween(configBody, "window._sharedData = ", ";");
+		  JSONObject config = JSONUtil.parseObj(configJson);
+		  String rolloutHash = config.getByPath("$.rollout_hashn", String.class);
+		  String csrftoken = config.getByPath("$.config.csrf_token", String.class);
+		  String encPublicKey = config.getByPath("$.encryption.public_key", String.class);
+		  Integer enckeyId = config.getByPath("$.encryption.key_id", Integer.class);
+		  String passowrd = InstagramAes.enc(enckeyId, encPublicKey, igUserPassword);
+		  HttpResponse rep = HttpRequest.post("https://www.instagram.com/accounts/login/ajax/")
+									  .header("user-agent","Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36")
+									  .header("content-type", "application/x-www-form-urlencoded")
+									  .header("referer","https://www.instagram.com/")
+									  .header("origin", "https://www.instagram.com")
+									  .header("sec-fetch-dest", "empty")
+									  .header("sec-fetch-mode", "cors")
+									  .header("sec-fetch-site", "same-origin")
+									  .header("x-csrftoken", csrftoken)
+									  .header("x-ig-app-id", "936619743392459") 
+									  .header("x-ig-www-claim", "0")
+									  .header("x-instagram-ajax", rolloutHash)
+									  .form("username", "ponbous")
+									  .form("enc_password", passowrd)
+									  .form("optIntoOneTap", false)
+									  .form("queryParams", "{}")
+									  .execute();
+		  System.out.println(rep.getStatus());
+		  StringBuffer sb = new StringBuffer();
+		  for (String sc : rep.headerList("Set-Cookie")) {
+			  String name = StrUtil.trim(sc.split(";")[0].split("=")[0]);
+			  String value =  StrUtil.trim(sc.split(";")[0].split("=")[1]);
+			  sb.append(name+"="+value+";");
+		}
+		cookie = sb.toString();
+	}
 }

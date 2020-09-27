@@ -1,6 +1,7 @@
 package com.ins.bot.task;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,11 +56,18 @@ public class Tasks {
 		logger.info("定时刷新结束...");
 	}
 	
-	@Scheduled(cron = "0 0 0 1/2 * ?")
+	@Scheduled(cron = "0 0 0 1/ * ?")
 	public void crefreshUrls() {
 		logger.info("刷新任务开始...");
 		ins.refreshUrls("cronRefresh");
 		logger.info("刷新任务结束...");
+	}
+	
+	@Scheduled(cron = "0 0 0 1/7 * ?")
+	public void refreshCookie() throws GeneralSecurityException {
+		logger.info("刷新cookie开始...");
+		ins.refreshCookie();
+		logger.info("刷新cookie结束...");
 	}
 	
 }
