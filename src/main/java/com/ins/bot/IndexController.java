@@ -364,9 +364,8 @@ public class IndexController {
 	 */
 	@RequestMapping("/refreshCookie")
 	@ResponseBody
-	public String refreshCookie() throws GeneralSecurityException {
-		ins.refreshCookie();
-		return "success";
+	public UserInfo refreshCookie() throws GeneralSecurityException {
+		return ins.refreshCookie();
 	}
 	
 }

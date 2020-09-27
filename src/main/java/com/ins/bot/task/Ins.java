@@ -631,9 +631,9 @@ public class Ins{
 			}
 		}
 	}
-	public void refreshCookie() throws GeneralSecurityException {
+	
+	public UserInfo refreshCookie() throws GeneralSecurityException {
 		HttpResponse firstResponse = HttpRequest.get("https://www.instagram.com/").execute();
-		  System.out.println(firstResponse.getCookieStr());
 		  String configBody = firstResponse.body();
 		  String configJson = StrUtil.subBetween(configBody, "window._sharedData = ", ";");
 		  JSONObject config = JSONUtil.parseObj(configJson);
@@ -659,7 +659,6 @@ public class Ins{
 									  .form("optIntoOneTap", false)
 									  .form("queryParams", "{}")
 									  .execute();
-		  System.out.println(rep.getStatus());
 		  StringBuffer sb = new StringBuffer();
 		  for (String sc : rep.headerList("Set-Cookie")) {
 			  String name = StrUtil.trim(sc.split(";")[0].split("=")[0]);
@@ -667,5 +666,6 @@ public class Ins{
 			  sb.append(name+"="+value+";");
 		}
 		cookie = sb.toString();
+		return this.getUserInfo(this.getMainDoc("iammingki"), "iammingki");
 	}
 }
