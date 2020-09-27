@@ -56,7 +56,7 @@ public class Tasks {
 		logger.info("定时刷新结束...");
 	}
 	
-	@Scheduled(cron = "0 0 0 1/ * ?")
+	@Scheduled(cron = "0 0 0 1/2 * ?")
 	public void crefreshUrls() {
 		logger.info("刷新任务开始...");
 		ins.refreshUrls("cronRefresh");
