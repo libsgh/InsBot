@@ -368,4 +368,15 @@ public class IndexController {
 		return ins.refreshCookie();
 	}
 	
+	/**
+	 * 
+	 * @return
+	 * @throws GeneralSecurityException
+	 */
+	@RequestMapping("/cookieValid")
+	@ResponseBody
+	public Object cookieValid() throws GeneralSecurityException {
+		return ins.cookieValid();
+	}
+	
 }

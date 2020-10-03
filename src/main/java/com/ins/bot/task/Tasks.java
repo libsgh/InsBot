@@ -63,11 +63,16 @@ public class Tasks {
 		logger.info("刷新任务结束...");
 	}
 	
-	@Scheduled(cron = "0 0 0 1/7 * ?")
+	@Scheduled(cron = "0 0/30 * * * ?")
 	public void refreshCookie() throws GeneralSecurityException {
-		logger.info("刷新cookie开始...");
-		ins.refreshCookie();
-		logger.info("刷新cookie结束...");
+		if(!ins.cookieValid()) {
+			logger.info("刷新cookie开始...");
+			ins.refreshCookie();
+			logger.info("刷新cookie结束...");
+		}else{
+			logger.info("cookie有效，不需要刷新cookie...");
+		}
+	
 	}
 	
 }

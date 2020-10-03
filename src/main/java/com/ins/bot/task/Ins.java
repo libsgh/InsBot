@@ -48,6 +48,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.digest.DigestUtil;
+import cn.hutool.http.HttpException;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
@@ -265,67 +266,71 @@ public class Ins{
 	}
 	
 	public UserInfo getUserInfo(Document doc, String username) {
-		UserInfo oui = template.findOne(new Query(Criteria.where("username").is(username)), UserInfo.class, "InsUserList");
-		Elements scripts = doc.select("script");
-		for (Element script : scripts) {
-			if(script.html().contains("window._sharedData =")) {
-				 String str = script.html().replace("\n", ""); //这里是为了解决 无法多行匹配的问题
-			      String pattern = "window._sharedData = \\{(.*?)\\};"; //()必须加，
-			      Pattern r = Pattern.compile(pattern,Pattern.MULTILINE);// Pattern.MULTILINE 好像没有什么用，所以才使用上面的replace
-			      Matcher m = r.matcher(str);
-			      if(m.find()){
-			        JSONObject jj =  new JSONObject();
-					try {
-						String json = m.group().replaceAll("window._sharedData = ", "").replaceAll(";", "");
-						jj = JSONUtil.parseObj(json).getJSONObject("entry_data")
-						.getJSONArray("ProfilePage")
-						.getJSONObject(0).getJSONObject("graphql").getJSONObject("user");
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					UserInfo ui = new UserInfo();
-					ui.setId(jj.getStr("id"));
-					ui.setFull_name(jj.getStr("full_name"));
-					ui.setUsername(jj.getStr("username"));
-					ui.setEdge_followed_by(jj.getJSONObject("edge_followed_by").getLong("count"));
-					ui.setEdge_follow(jj.getJSONObject("edge_follow").getLong("count"));
-					//String url = cacheImgToSinaPicBed(jj.getString("profile_pic_url_hd"));
-					if(oui != null) {
-						if(this.needRefresh(oui.getProfile_pic_url_hd(), jj.getStr("profile_pic_url_hd"))) {
-							ui.setProfile_pic_url_hd(cacheService.cache(jj.getStr("profile_pic_url_hd"), jj.getStr("username")));
-						}else{
-							ui.setProfile_pic_url_hd(oui.getProfile_pic_url_hd());
+		try {
+			UserInfo oui = template.findOne(new Query(Criteria.where("username").is(username)), UserInfo.class, "InsUserList");
+			Elements scripts = doc.select("script");
+			for (Element script : scripts) {
+				if(script.html().contains("window._sharedData =")) {
+					 String str = script.html().replace("\n", ""); //这里是为了解决 无法多行匹配的问题
+				      String pattern = "window._sharedData = \\{(.*?)\\};"; //()必须加，
+				      Pattern r = Pattern.compile(pattern,Pattern.MULTILINE);// Pattern.MULTILINE 好像没有什么用，所以才使用上面的replace
+				      Matcher m = r.matcher(str);
+				      if(m.find()){
+				        JSONObject jj =  new JSONObject();
+						try {
+							String json = m.group().replaceAll("window._sharedData = ", "").replaceAll(";", "");
+							jj = JSONUtil.parseObj(json).getJSONObject("entry_data")
+							.getJSONArray("ProfilePage")
+							.getJSONObject(0).getJSONObject("graphql").getJSONObject("user");
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-					}else {
-						ui.setProfile_pic_url_hd(cacheService.cache(jj.getStr("profile_pic_url_hd"), jj.getStr("username")));
-					}
-					ui.setTiez(jj.getJSONObject("edge_owner_to_timeline_media").getLong("count"));
-					ui.setBiography(jj.getStr("biography"));
-					ui.setExternal_url(jj.getStr("external_url"));
-					ui.setIs_verified(jj.getBool("is_verified"));
-					String js = doc.select("script").parallelStream().filter(c -> c.attr("src").contains("Consumer.js")).collect(Collectors.toList()).get(0).attr("src");
-					String url = "https://www.instagram.com" + js;
-					String content =  HttpRequest.get(url).execute().body();
-					String hash = StrUtil.subBetween(content, "void 0:s.pagination},queryId:\"", "\"");
-					if(StrUtil.isBlank(hash)) {
-						hash = StrUtil.subBetween(content, "void 0:l.pagination},queryId:\"", "\"");
-					}
-					//FileUtil.writeString(content, "/home/single/Desktop/1.txt", "UTF-8");
-					String hash2 = StrUtil.subBetween(content, "()=>s(o(t))}})}}Object.defineProperty(e,'__esModule',{value:!0});const s=\"", "\"");
-					if(StrUtil.isBlank(hash2)) {
-						hash2 = StrUtil.subBetween(content, "function(){return c(o(t))}}})}}Object.defineProperty(e,'__esModule',{value:!0});var c=\"", "\"");
-					}
-					String hash3 = StrUtil.subBetween(content, "{return s(o.next(t,()=>s(n(t)),!1))}}Object.defineProperty(e,'__esModule',{value:!0});const s=\"", "\"");
-					if(StrUtil.isBlank(hash3)) {
-						hash3 = StrUtil.subBetween(content, "{value:!0});var s=\"", "\"");
-					}
-					ui.setQuery_hash(hash);//用于帖子查询
-					ui.setQuery_hash2(hash2);//用于video查询
-					ui.setQuery_hash3(hash3);//用于highlightReel查询
-					ui.setReels(highlightReels(oui, ui.getId(), hash3, ui.getUsername()));
-					return ui;
-			    }
+						UserInfo ui = new UserInfo();
+						ui.setId(jj.getStr("id"));
+						ui.setFull_name(jj.getStr("full_name"));
+						ui.setUsername(jj.getStr("username"));
+						ui.setEdge_followed_by(jj.getJSONObject("edge_followed_by").getLong("count"));
+						ui.setEdge_follow(jj.getJSONObject("edge_follow").getLong("count"));
+						//String url = cacheImgToSinaPicBed(jj.getString("profile_pic_url_hd"));
+						if(oui != null) {
+							if(this.needRefresh(oui.getProfile_pic_url_hd(), jj.getStr("profile_pic_url_hd"))) {
+								ui.setProfile_pic_url_hd(cacheService.cache(jj.getStr("profile_pic_url_hd"), jj.getStr("username")));
+							}else{
+								ui.setProfile_pic_url_hd(oui.getProfile_pic_url_hd());
+							}
+						}else {
+							ui.setProfile_pic_url_hd(cacheService.cache(jj.getStr("profile_pic_url_hd"), jj.getStr("username")));
+						}
+						ui.setTiez(jj.getJSONObject("edge_owner_to_timeline_media").getLong("count"));
+						ui.setBiography(jj.getStr("biography"));
+						ui.setExternal_url(jj.getStr("external_url"));
+						ui.setIs_verified(jj.getBool("is_verified"));
+						String js = doc.select("script").parallelStream().filter(c -> c.attr("src").contains("Consumer.js")).collect(Collectors.toList()).get(0).attr("src");
+						String url = "https://www.instagram.com" + js;
+						String content =  HttpRequest.get(url).execute().body();
+						String hash = StrUtil.subBetween(content, "void 0:s.pagination},queryId:\"", "\"");
+						if(StrUtil.isBlank(hash)) {
+							hash = StrUtil.subBetween(content, "void 0:l.pagination},queryId:\"", "\"");
+						}
+						//FileUtil.writeString(content, "/home/single/Desktop/1.txt", "UTF-8");
+						String hash2 = StrUtil.subBetween(content, "()=>s(o(t))}})}}Object.defineProperty(e,'__esModule',{value:!0});const s=\"", "\"");
+						if(StrUtil.isBlank(hash2)) {
+							hash2 = StrUtil.subBetween(content, "function(){return c(o(t))}}})}}Object.defineProperty(e,'__esModule',{value:!0});var c=\"", "\"");
+						}
+						String hash3 = StrUtil.subBetween(content, "{return s(o.next(t,()=>s(n(t)),!1))}}Object.defineProperty(e,'__esModule',{value:!0});const s=\"", "\"");
+						if(StrUtil.isBlank(hash3)) {
+							hash3 = StrUtil.subBetween(content, "{value:!0});var s=\"", "\"");
+						}
+						ui.setQuery_hash(hash);//用于帖子查询
+						ui.setQuery_hash2(hash2);//用于video查询
+						ui.setQuery_hash3(hash3);//用于highlightReel查询
+						ui.setReels(highlightReels(oui, ui.getId(), hash3, ui.getUsername()));
+						return ui;
+				    }
+				}
 			}
+		} catch (Exception e) {
+			//可能是cookie失效
 		}
 		return null;
 	}
@@ -667,5 +672,15 @@ public class Ins{
 		}
 		cookie = sb.toString();
 		return this.getUserInfo(this.getMainDoc("iammingki"), "iammingki");
+	}
+
+	public Boolean cookieValid() {
+		UserInfo ui =  this.getUserInfo(this.getMainDoc("iammingki"), "iammingki");
+		if(ui != null) {
+			return true;
+		}else{
+			return false;
+		}
+		
 	}
 }
