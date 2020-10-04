@@ -1,5 +1,8 @@
 package com.ins.bot;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
@@ -12,14 +15,17 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Controller;
 
 import com.ins.bot.common.MyViewResolver;
+import com.ins.bot.task.Ins;
 import com.jfinal.template.source.ClassPathSourceFactory;
 
 @SpringBootApplication
 @Controller
 @EnableAsync
 @EnableScheduling
-public class App {
+public class App implements ApplicationRunner {
 	
+	@Autowired
+	private Ins ins;
 	@Bean
     public ConfigurableServletWebServerFactory webServerFactory() {
 		TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();
@@ -42,6 +48,12 @@ public class App {
 	
 	public static void main(String[] args) {
 		SpringApplication.run(App.class, args);
+	}
+
+	@Override
+	public void run(ApplicationArguments args) throws Exception {
+		ins.refreshCookie();
+	
 	}
 	
 }

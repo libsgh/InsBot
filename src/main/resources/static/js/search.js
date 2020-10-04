@@ -100,3 +100,13 @@ function downloadMedia(obj){
 		window.location.href = ddo.children('video').children('source').attr('src');
 	}
 }
+navigator.clipboard.readText().then(
+  clipText => {
+	  if(clipText.match(new RegExp("^https://www.instagram.com/p/.*$"))) {
+		    $$("#url").val(clipText);
+		    document.getElementById("url").focus();
+			mdui.snackbar({
+				  message: '已检测到Instagram地址并自动粘贴'
+			});
+		}
+});
