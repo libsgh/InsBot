@@ -43,8 +43,13 @@ public class Tasks {
 	
 	@Scheduled(cron = "0 0/30 * * * ?")
 	@Async
-	public void refreshUrls() {
+	public void refreshUrls() throws GeneralSecurityException {
 		logger.info("刷新任务开始...");
+		if(!ins.cookieValid()) {
+			ins.refreshCookie();
+		}else{
+			logger.info("cookie有效，不需要刷新cookie...");
+		}
 		ins.refreshUrls("invalid");
 		logger.info("刷新任务结束...");
 	}
@@ -61,18 +66,6 @@ public class Tasks {
 		logger.info("刷新任务开始...");
 		ins.refreshUrls("cronRefresh");
 		logger.info("刷新任务结束...");
-	}
-	
-	@Scheduled(cron = "0 0/30 * * * ?")
-	public void refreshCookie() throws GeneralSecurityException {
-		if(!ins.cookieValid()) {
-			logger.info("刷新cookie开始...");
-			ins.refreshCookie();
-			logger.info("刷新cookie结束...");
-		}else{
-			logger.info("cookie有效，不需要刷新cookie...");
-		}
-	
 	}
 	
 }
