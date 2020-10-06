@@ -659,7 +659,7 @@ public class Ins{
 									  .header("x-ig-app-id", "936619743392459") 
 									  .header("x-ig-www-claim", "0")
 									  .header("x-instagram-ajax", rolloutHash)
-									  .form("username", "ponbous")
+									  .form("username", igUserName)
 									  .form("enc_password", passowrd)
 									  .form("optIntoOneTap", false)
 									  .form("queryParams", "{}")
@@ -671,7 +671,6 @@ public class Ins{
 			  sb.append(name+"="+value+";");
 		}
 		cookie = sb.toString();
-		System.out.println(cookie);
 		return this.getUserInfo(this.getMainDoc("iammingki"), "iammingki");
 	}
 
