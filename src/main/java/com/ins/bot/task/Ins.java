@@ -671,6 +671,7 @@ public class Ins{
 			  sb.append(name+"="+value+";");
 		}
 		cookie = sb.toString();
+		System.out.println(cookie);
 		return this.getUserInfo(this.getMainDoc("iammingki"), "iammingki");
 	}
 
