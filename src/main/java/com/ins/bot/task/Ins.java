@@ -638,7 +638,10 @@ public class Ins{
 	}
 	
 	public UserInfo refreshCookie() throws GeneralSecurityException {
-		HttpResponse firstResponse = HttpRequest.get("https://www.instagram.com/").execute();
+		HttpResponse firstResponse = HttpRequest.get("https://www.instagram.com/")
+					.header("user-agent","Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36")
+					.header("referer","https://www.instagram.com/")
+					.execute();
 		  String configBody = firstResponse.body();
 		  String configJson = StrUtil.subBetween(configBody, "window._sharedData = ", ";");
 		  JSONObject config = JSONUtil.parseObj(configJson);
@@ -649,8 +652,8 @@ public class Ins{
 		  String passowrd = InstagramAes.enc(enckeyId, encPublicKey, igUserPassword);
 		  HttpResponse rep = HttpRequest.post("https://www.instagram.com/accounts/login/ajax/")
 									  .header("user-agent","Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36")
-									  .header("content-type", "application/x-www-form-urlencoded")
 									  .header("referer","https://www.instagram.com/")
+									  .header("content-type", "application/x-www-form-urlencoded")
 									  .header("origin", "https://www.instagram.com")
 									  .header("sec-fetch-dest", "empty")
 									  .header("sec-fetch-mode", "cors")
@@ -662,13 +665,14 @@ public class Ins{
 									  .form("username", igUserName)
 									  .form("enc_password", passowrd)
 									  .form("optIntoOneTap", false)
-									  .form("queryParams", "{}")
+									  .form("queryParams", "{\"oneTapUsers\":\"[\\\"43703989006\\\"]\"}")
 									  .execute();
 		  StringBuffer sb = new StringBuffer();
 		  for (String sc : rep.headerList("Set-Cookie")) {
 			  String name = StrUtil.trim(sc.split(";")[0].split("=")[0]);
 			  String value =  StrUtil.trim(sc.split(";")[0].split("=")[1]);
 			  sb.append(name+"="+value+";");
+			  System.out.println(name+"="+value+";");
 		}
 		cookie = sb.toString();
 		return this.getUserInfo(this.getMainDoc("iammingki"), "iammingki");
