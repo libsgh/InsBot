@@ -41,7 +41,7 @@ public class Tasks {
 		logger.info("缓存任务结束...");
 	}
 	
-	@Scheduled(cron = "0 0/30 * * * ?")
+	@Scheduled(cron = "0 0 10,20 * * ?")
 	@Async
 	public void refreshUrls() throws GeneralSecurityException {
 		logger.info("刷新任务开始...");
@@ -54,7 +54,7 @@ public class Tasks {
 		logger.info("刷新任务结束...");
 	}
 	
-	@Scheduled(cron = "0 0/30 * * * ?")
+	@Scheduled(cron = "0 0 10,20 * * ?")
 	public void updateIns() {
 		logger.info("定时刷新开始...");
 		ins.run();
