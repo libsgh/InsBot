@@ -155,6 +155,13 @@ public class IndexController {
 		return "机器人已经开始工作，请稍等一会儿刷新页面查看";
 	}
 	
+	@GetMapping("/run")
+	@ResponseBody
+	public String run() {
+		ins.run();
+		return "机器人已经开始工作，请稍等一会儿刷新页面查看";
+	}
+	
 	@GetMapping("/remove/{username}")
 	@ResponseBody
 	public String remove(@PathVariable String username) {
