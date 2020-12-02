@@ -76,7 +76,7 @@ public class Ins{
 	
 	@Autowired
 	private CacheService cacheService;
-	
+	@Value("${COOKIE}")
 	private String cookie;
 	
 	@Value("${IG_USER_NAME}")
@@ -638,7 +638,7 @@ public class Ins{
 	}
 	
 	public UserInfo refreshCookie() throws GeneralSecurityException {
-		HttpResponse firstResponse = HttpRequest.get("https://www.instagram.com/")
+		/**HttpResponse firstResponse = HttpRequest.get("https://www.instagram.com/")
 					.header("user-agent","Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36")
 					.header("referer","https://www.instagram.com/")
 					.execute();
@@ -674,7 +674,7 @@ public class Ins{
 			  sb.append(name+"="+value+";");
 			  System.out.println(name+"="+value+";");
 		}
-		cookie = sb.toString();
+		cookie = sb.toString();**/
 		return this.getUserInfo(this.getMainDoc("iammingki"), "iammingki");
 	}
 
