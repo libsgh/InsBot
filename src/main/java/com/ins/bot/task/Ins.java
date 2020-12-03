@@ -308,6 +308,8 @@ public class Ins{
 						String js = doc.select("script").parallelStream().filter(c -> c.attr("src").contains("Consumer.js")).collect(Collectors.toList()).get(0).attr("src");
 						String url = "https://www.instagram.com" + js;
 						String content =  HttpRequest.get(url).execute().body();
+						System.out.println(content);
+						//void 0:l.pagination},queryId:"
 						String hash = StrUtil.subBetween(content, "void 0:s.pagination},queryId:\"", "\"");
 						if(StrUtil.isBlank(hash)) {
 							hash = StrUtil.subBetween(content, "void 0:l.pagination},queryId:\"", "\"");
