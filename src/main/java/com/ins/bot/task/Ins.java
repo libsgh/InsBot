@@ -128,7 +128,6 @@ public class Ins{
 		Map<String, String> headers = new HashMap<String, String>();
 		headers.put("cookie", cookie);
 		String result = HttpRequest.get(url).addHeaders(headers).execute().body();
-		System.out.println(result);
 		JSONObject jo = null;
 		try {
 			jo = JSONUtil.parseObj(result)
@@ -322,6 +321,9 @@ public class Ins{
 						if(StrUtil.isBlank(hash3)) {
 							hash3 = StrUtil.subBetween(content, "{value:!0});var s=\"", "\"");
 						}
+						System.out.println(hash);
+						System.out.println(hash2);
+						System.out.println(hash3);
 						ui.setQuery_hash(hash);//用于帖子查询
 						ui.setQuery_hash2(hash2);//用于video查询
 						ui.setQuery_hash3(hash3);//用于highlightReel查询
