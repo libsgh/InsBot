@@ -308,11 +308,12 @@ public class Ins{
 						String js = doc.select("script").parallelStream().filter(c -> c.attr("src").contains("Consumer.js")).collect(Collectors.toList()).get(0).attr("src");
 						String url = "https://www.instagram.com" + js;
 						String content =  HttpRequest.get(url).execute().body();
-						System.out.println(content);
-						//void 0:l.pagination},queryId:"
 						String hash = StrUtil.subBetween(content, "void 0:s.pagination},queryId:\"", "\"");
 						if(StrUtil.isBlank(hash)) {
 							hash = StrUtil.subBetween(content, "void 0:l.pagination},queryId:\"", "\"");
+						}
+						if(StrUtil.isBlank(hash)) {
+							hash = StrUtil.subBetween(content, "void 0:c.pagination},queryId:\"", "\"");
 						}
 						//FileUtil.writeString(content, "/home/single/Desktop/1.txt", "UTF-8");
 						String hash2 = StrUtil.subBetween(content, "()=>s(o(t))}})}}Object.defineProperty(e,'__esModule',{value:!0});const s=\"", "\"");
