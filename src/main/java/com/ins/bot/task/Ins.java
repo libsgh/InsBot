@@ -128,6 +128,7 @@ public class Ins{
 		Map<String, String> headers = new HashMap<String, String>();
 		headers.put("cookie", cookie);
 		String result = HttpRequest.get(url).addHeaders(headers).execute().body();
+		System.out.println(result);
 		JSONObject jo = null;
 		try {
 			jo = JSONUtil.parseObj(result)
