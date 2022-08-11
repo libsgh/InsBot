@@ -112,7 +112,7 @@ public class Ins {
 			if (!flag) {
 				Node n = template.findById(node.getId(), Node.class, "InsUserData");
 				if (n != null) {
-					return;
+					continue;
 				}
 			}
 			template.save(node, "InsUserData");
