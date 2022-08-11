@@ -1,4 +1,4 @@
-var $$ = mdui.JQ;
+var $$ = mdui.$;
 var pageNum = 1;
 var clipboard = new ClipboardJS('.mdui-card-content');
 function loadMore(id, isMobile){
@@ -26,7 +26,7 @@ function loadMore(id, isMobile){
 		 }
 		 html += "     </div>";
 		 }else{
-			 html+="    <a class=\"html5lightbox\" data-group=\"gallery_"+x.id+"\" href=\""+x.display_url+"\"> <img decoding=\"auto\" srcset=\""+x.srcset+"\" /></a>";
+			 html+="    <a class=\"html5lightbox\" data-group=\"gallery_"+x.id+"\" href=\""+x.display_url+"\"> <img decoding=\"auto\" srcset=\""+x.srcset+"\" / style=\"max-height:100%\"></a>";
 			 html+="    <input type=\"hidden\" class=\"html5lightbox\" data-group=\"gallery_"+x.id+"\" href=\""+x.display_url+"\" />";
 			 if(x.children){
 				 $.each(x.children, function (index, c) {
@@ -98,31 +98,6 @@ function downloadFiles (obj) {
 			x.send();
 		}, 1000);
 	});
-}
-
-function downloadAll(uname){
-	mdui.snackbar({
-	  message: '正在打包下载，请耐心等候'
-	});
-	var arr = [];
-	$("input[type=hidden]").each(function(){
-		var id = $(this).attr("data-group").replace(/gallery_/g, "");
-		arr.push(id);
-	});
-	$.ajax({
-	  method: 'POST',
-	  url: './compress/download?ids='+distinct(arr, arr).join(",")+'&uname='+uname,
-	  success: function(data){
-		if(data.errorCode == -1){
-			mdui.snackbar({
-				  message: '操作失败，请稍后重试'
-			});
-		  }else{
-			location.href="/down/"+data.fileName;
-		  }
-	  }
-	});
-	
 }
 $("body").on("mouseenter", ".mdui-col", function() {
     $(this).find(".mdui-card-media-covered-top").show();

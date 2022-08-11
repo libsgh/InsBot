@@ -6,7 +6,7 @@
      opacity: 0 !important;
 }
 .custom-button-next {
-  	background: url(http://insbox.herokuapp.com/img/icon.png) no-repeat;
+  	background: url(/img/icon.png) no-repeat;
 	background-position: -162px -98px;
  	position: absolute;
     top: 50%;
@@ -21,7 +21,7 @@
     color: var(--swiper-navigation-color, var(--swiper-theme-color));
 }
 .custom-button-prev {
-  		background: url(http://insbox.herokuapp.com/img/icon.png) no-repeat;
+  		background: url(/img/icon.png) no-repeat;
 	background-position: -130px -98px;
  			position: absolute;
     top: 50%;

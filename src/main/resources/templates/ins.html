@@ -5,9 +5,9 @@
 	  <meta charset="utf-8">
 	  <meta name="viewport" content="width=device-width">
 	  <title>#if(ui.full_name=="")@#(ui.username)#else#(ui.full_name)(@#(ui.username))#end · InsBox 照片视频下载</title>
-	  <link href="//cdn.bootcss.com/mdui/0.4.3/css/mdui.min.css" rel="stylesheet">
-	  <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/libsgh/InsBot@master/src/main/resources/static/img/favicon.ico" />
-	  <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/libsgh/InsBot@master/src/main/resources/static/css/lightslider.min.css" />                  
+	  <link href="//cdnjs.loli.net/ajax/libs/mdui/1.0.2/css/mdui.min.css" rel="stylesheet">
+	  <link rel="shortcut icon" href="/img/favicon.ico" />
+	  <link type="text/css" rel="stylesheet" href="/css/lightslider.min.css" />
 	</head>
 	<body>
 	<div class="mdui-drawer mdui-drawer-close" id="main-drawer">
@@ -32,12 +32,10 @@
 					  <div class="mdui-row">
 				  		#if(isMobile) 
 				  		#else
-			  			<button class="mdui-btn mdui-btn-icon"  style="float: right;" title="下载全部" onclick="downloadAll('#(ui.username)')"><i class="mdui-icon material-icons">file_download</i></button>
 					  	<a href="javascript:;" style="float: right;" class ="mdui-btn mdui-btn-icon" title="缓存列表" mdui-drawer="{target: '#main-drawer', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
 				  		#end
 					  	<div class="mdui-col-sm-5 mdui-col-md-4">
-					  		#if(isMobile) 
-				  			<button class="mdui-btn mdui-btn-icon"  style="float: right;" title="下载全部" onclick="downloadAll('#(ui.username)')"><i class="mdui-icon material-icons">file_download</i></button>
+					  		#if(isMobile)
 						  	<a href="javascript:;" style="float: right;" class ="mdui-btn mdui-btn-icon" title="缓存列表" mdui-drawer="{target: '#main-drawer', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
 					  		#else
 					  		#end
@@ -123,7 +121,7 @@
 					        #if(x.is_video)
 					        	<input type="hidden" class="html5lightbox" data-group="gallery_#(x.id)" href="#(x.video_url)" />
 					        	<a class="html5lightbox" data-group="gallery_#(x.id)" href="#(x.video_url)">
-									<video class="mdui-video-fluid" style="height: 100%;width: 100%" webkit-playsinline playsinline controls poster="#(x.srcs.get(4).src)">
+									<video class="mdui-video-fluid" style="height: 100%;width: 100%" webkit-playsinline playsinline controls poster="#(x.srcs.get(0).src)">
 									  <source src="#(x.video_url)" type="video/mp4">
 									</video>
 					        	</a>
@@ -133,7 +131,7 @@
 							#else
 							  <a class="html5lightbox" data-group="gallery_#(x.id)" href="#(x.display_url)">
 							  <input type="hidden" class="html5lightbox" data-group="gallery_#(x.id)" href="#(x.display_url)" />
-							  <img decoding="auto" srcset="#(x.srcset)" /></a>
+							  <img decoding="auto" srcset="#(x.srcset)" style="max-height: 100%" /></a>
 							  #if(x.children)
 							  	 #for(c : x.children)
 							  	  #if(c.is_video)
@@ -171,13 +169,13 @@
   		</div>
 	</div>
 	<a id="go-to-top" href="javascript:void(0);" class="mdui-fab mdui-fab-fixed mdui-ripple mdui-color-indigo" title="返回顶部"><i class="mdui-icon material-icons">expand_less</i></a>
-	<script src="//cdn.bootcss.com/mdui/0.4.3/js/mdui.min.js"></script>
-	<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
-	<script src="https://cdn.bootcss.com/clipboard.js/2.0.4/clipboard.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/gh/libsgh/InsBot@master/src/main/resources/static/html5lightbox/html5lightbox.js"></script>
-	<script src="https://cdn.jsdelivr.net/gh/libsgh/InsBot@master/src/main/resources/static/js/download.js"></script>
-	<script src="https://cdn.jsdelivr.net/gh/libsgh/InsBot@master/src/main/resources/static/js/main.js"></script>
-	<script src="https://cdn.jsdelivr.net/gh/libsgh/InsBot@master/src/main/resources/static/js/lightslider.min.js"></script>
+	<script src="//cdnjs.loli.net/ajax/libs/mdui/1.0.2/js/mdui.min.js"></script>
+	<script src="//cdnjs.loli.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="//cdnjs.loli.net/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
+	<script src="/html5lightbox/html5lightbox.js"></script>
+	<script src="/js/download.js"></script>
+	<script src="/js/main.js"></script>
+	<script src="/js/lightslider.min.js"></script>
 	<!-- <script src="#(ctx)/js/main.js"></script> -->
 	</body>
 	<script type="text/javascript">

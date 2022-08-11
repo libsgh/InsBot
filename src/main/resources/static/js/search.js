@@ -1,4 +1,4 @@
-var $$ = mdui.JQ;
+var $$ = mdui.$;
 function toBigImg() {
     $$(".opacityBottom").addClass("opacityBottom");//添加遮罩层
     $$(".opacityBottom").show();
@@ -30,11 +30,11 @@ $$('.search').on('click', function (e) {
 				 return;
 			 }
 			 $$("#cards").html("");
-			 $$.each(eval("("+data+")"), function (i, item) {
+			 $$.each(JSON.parse(data), function (i, item) {
 					var html = '<div class="mdui-col">'+
 					'	<div class="mdui-card">'+
 					'		<div class="mdui-card-header">'+
-					'    		<img class="mdui-card-header-avatar" src="/ins/download/'+item.pic_url+'"/>'+
+					'    		<img class="mdui-card-header-avatar" src="'+item.pic_url+'"/>'+
 					'  				<button class="mdui-btn mdui-btn-icon mdui-btn-dense mdui-color-theme-accent mdui-ripple mdui-float-right" onclick="downloadMedia(this)"><i class="mdui-icon material-icons">file_download</i></button>'+
 					'    		<div class="mdui-card-header-title">'+item.username+'</div>'+
 					'    		<div class="mdui-card-header-subtitle">'+item.fullname+'</div>'+
@@ -46,10 +46,10 @@ $$('.search').on('click', function (e) {
 						html+='<div class="swiper-slide">';
 						if(c.is_video){
 						html+='			<video class="mdui-video-fluid" controls>'+
-						'			  <source src="/ins/download/'+c.video_url+'" type="video/mp4">'+
+						'			  <source src="'+c.video_url+'" type="video/mp4">'+
 						'			</video>';
 						}else{
-						html+='			<img src="/ins/download/'+c.display_url+'"/>';
+						html+='			<img src="'+c.display_url+'"/>';
 						}
 						html+='</div>';
 					});
@@ -100,13 +100,3 @@ function downloadMedia(obj){
 		window.location.href = ddo.children('video').children('source').attr('src');
 	}
 }
-navigator.clipboard.readText().then(
-  clipText => {
-	  if(clipText.match(new RegExp("^https://www.instagram.com/p/.*$"))) {
-		    $$("#url").val(clipText);
-		    document.getElementById("url").focus();
-			mdui.snackbar({
-				  message: '已检测到Instagram地址并自动粘贴'
-			});
-		}
-});

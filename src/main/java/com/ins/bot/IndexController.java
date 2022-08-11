@@ -7,16 +7,18 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.http.HttpUtil;
+import com.ins.bot.common.PicBed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +27,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.client.ClientHttpRequest;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.mobile.device.Device;
 import org.springframework.mobile.device.LiteDeviceResolver;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.util.StreamUtils;
+import org.springframework.web.bind.annotation.*;
 
 import com.ins.bot.bean.Node;
 import com.ins.bot.bean.UserInfo;
@@ -144,13 +147,13 @@ public class IndexController {
 	
 	@GetMapping("/update/{userid}")
 	@ResponseBody
-	public String update(@PathVariable String userid) {
+	public String update(@PathVariable String userid, Boolean flag) {
 		if(StrKit.isBlank(userid)) {
 			return "请输入ins账号";
 		} else if(userid.equals("all")){
 			ins.run();
 		}else{
-			ins.excute(userid, null, true);
+			ins.excute(userid, false);
 		}
 		return "机器人已经开始工作，请稍等一会儿刷新页面查看";
 	}
@@ -255,38 +258,6 @@ public class IndexController {
 		
 	}
 	
-	@GetMapping("/ins/download/{filename:.+}")
-	public void download(HttpServletResponse res, @PathVariable String filename) throws UnsupportedEncodingException {
-		File file = new File(path+File.separator+"ins"+File.separator+filename);
-		res.setHeader("content-type", "application/octet-stream");
-		res.setContentType("application/octet-stream");
-		res.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(filename, "UTF-8"));
-		res.setContentLengthLong(file.length());
-		byte[] buff = new byte[1024];
-		BufferedInputStream bis = null;
-		OutputStream os = null;
-		try {
-			os = res.getOutputStream();
-			bis = new BufferedInputStream(new FileInputStream(file));
-			int i = bis.read(buff);
-			while (i != -1) {
-				os.write(buff, 0, buff.length);
-				os.flush();
-				i = bis.read(buff);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (bis != null) {
-				try {
-					bis.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-	
 	@RequestMapping("/loadMore")
 	@ResponseBody
 	public Object loadMore(String userId, Integer pageNum) {
@@ -296,42 +267,7 @@ public class IndexController {
 		List<Node> ud = template.find(pageQuery, Node.class, "InsUserData");
 		return ud;
 	}
-	
-	@RequestMapping("/compress/download")
-	@ResponseBody
-	public Map<String, Object> compressDownload(String ids, String uname) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		try {
-			String random = RandomUtil.randomString(4);
-			File file = new File(path + File.separator + uname + random + ".zip");
-			ins.compressZip(file, ids, uname, random);
-			if(file.exists()) {
-				map.put("fileName",  uname + random + ".zip");
-				map.put("errorCode",  0);
-			}else{
-				map.put("errorCode",  -1);
-				map.put("fileName",  "");
-			}
-		} catch (Exception e) {
-			logger.info(e.getMessage(), e);
-			map.put("errorCode",  -1);
-			map.put("fileName",  "");
-		}
-		return map;
-	}
 
-	/*
-	 * @RequestMapping("/reUpload")
-	 * 
-	 * @ResponseBody public Object reUpload() { Criteria c1 =
-	 * Criteria.where("display_url").regex(".*?instagram.*"); Criteria c2 =
-	 * Criteria.where("srcs.src").regex(".*?instagram.*"); Criteria c3 =
-	 * Criteria.where("video_url").regex(".*?instagram.*"); Criteria cr = new
-	 * Criteria(); Query query = new Query(cr.orOperator(c1, c2, c3)); List<Node>
-	 * nlist = template.find(query, Node.class, "InsUserData"); for (Node node :
-	 * nlist) { node.setSoureType("invalid"); template.save(node, "InsUserData"); }
-	 * return nlist; }
-	 */	
 	/**
 	 * 查询各个账户缓存任务状态
 	 * @param model
@@ -362,28 +298,10 @@ public class IndexController {
 		model.addAttribute("unlist", rs);
 		return "tasks";
 	}
-	
-	/**
-	 * 手动登录刷新缓存
-	 * @param model
-	 * @return
-	 * @throws GeneralSecurityException 
-	 */
-	@RequestMapping("/refreshCookie")
-	@ResponseBody
-	public UserInfo refreshCookie() throws GeneralSecurityException {
-		return ins.refreshCookie();
+
+	@RequestMapping(value = "/api/video/{videoCode}")
+	public String video(HttpServletRequest request, HttpServletResponse response, @PathVariable String videoCode) throws IOException {
+		return "redirect:" + PicBed.getVideoUrl(videoCode);
 	}
-	
-	/**
-	 * 
-	 * @return
-	 * @throws GeneralSecurityException
-	 */
-	@RequestMapping("/cookieValid")
-	@ResponseBody
-	public Object cookieValid() throws GeneralSecurityException {
-		return ins.cookieValid();
-	}
-	
+
 }
