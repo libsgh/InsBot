@@ -14,3 +14,5 @@ spring:
 logging:
   level:
     org.springframework.data.mongodb.core.MongoTemplate: info
+ui_collection_name: InsUserListv2
+ud_collection_name: InsUserDatav2

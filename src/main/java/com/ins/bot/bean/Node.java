@@ -41,8 +41,8 @@ public class Node {
 	private String timeF;//时间戳（格式化）
 	
 	private String srcset;
-	
-	private String soureType;//ins(缓存过程中失败),gh_cdn(已经被缓存),invalid(失效的，需要重新获取), cronRefresh(定时刷新)
+
+	private String soureType;//ins(原始地址),cache(已缓存)
 	
 	public String getUserId() {
 		return userId;

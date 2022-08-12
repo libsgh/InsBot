@@ -61,7 +61,13 @@ public class IndexController {
 	private String path;
 	
 	public static Integer pageSize = 12;
-	
+
+	@Value("${ui_collection_name:InsUserList}")
+	private String uiCollectionName;
+
+	@Value("${ud_collection_name:InsUserData}")
+	private String udCollectionName;
+
 	@GetMapping("/{username}")
 	public String page(HttpServletRequest request,@PathVariable String username, Model model) {
 		LiteDeviceResolver deviceResolver = new LiteDeviceResolver();
@@ -69,20 +75,20 @@ public class IndexController {
 		model.addAttribute("isMobile", device.isMobile());
 		model.addAttribute("isNormal", device.isNormal());
 		model.addAttribute("isTablet", device.isTablet());
-		List<UserInfo> list = template.findAll(UserInfo.class, "InsUserList");
+		List<UserInfo> list = template.findAll(UserInfo.class, uiCollectionName);
 		model.addAttribute("unlist", list);
 		Integer pageNum = 1;
 		if(StrKit.isBlank(username)) {
 			return "index";
 		} else {
-			UserInfo ui = template.findOne(new Query(Criteria.where("username").is(username)), UserInfo.class, "InsUserList");
+			UserInfo ui = template.findOne(new Query(Criteria.where("username").is(username)), UserInfo.class, uiCollectionName);
 			if(ui == null) {
 				return "404";
 			}else {
 				Query pageQuery = new Query(Criteria.where("userId").is(ui.getId()))
 						.skip((pageNum - 1) * pageSize).limit(pageSize)
 						.with(Sort.by(Sort.Order.desc("timestamp")));
-				List<Node> ud = template.find(pageQuery, Node.class, "InsUserData");
+				List<Node> ud = template.find(pageQuery, Node.class, udCollectionName);
 				model.addAttribute("ud", ud);
 				model.addAttribute("ui", ui);
 				return "ins";
@@ -91,7 +97,7 @@ public class IndexController {
 	}
 	@GetMapping("/")
 	public String index(Model model) {
-		List<UserInfo> list = template.findAll(UserInfo.class, "InsUserList");
+		List<UserInfo> list = template.findAll(UserInfo.class, uiCollectionName);
 		if(list != null && !list.isEmpty()) {
 			model.addAttribute("unlist", list);
 		}
@@ -107,7 +113,7 @@ public class IndexController {
 	@GetMapping("/api/ui/{username}")
 	@ResponseBody
 	public Object getUserInfo(@PathVariable String username) {
-		UserInfo ui = template.findOne(new Query(Criteria.where("username").is(username)), UserInfo.class, "InsUserList");
+		UserInfo ui = template.findOne(new Query(Criteria.where("username").is(username)), UserInfo.class, uiCollectionName);
 		if(StrKit.isBlank(username)) {
 			return "404";
 		} else if(ui == null){
@@ -120,7 +126,7 @@ public class IndexController {
 	@GetMapping("/api/ud/{username}")
 	@ResponseBody
 	public Object getUserData(@PathVariable String username) {
-		UserInfo ui = template.findOne(new Query(Criteria.where("username").is(username)), UserInfo.class, "InsUserList");
+		UserInfo ui = template.findOne(new Query(Criteria.where("username").is(username)), UserInfo.class, uiCollectionName);
 		if(StrKit.isBlank(username)) {
 			return "404";
 		} else if(ui == null){
@@ -128,7 +134,7 @@ public class IndexController {
 		}else {
 			Query pageQuery = new Query(Criteria.where("userId").is(ui.getId()))
 							.with(Sort.by(Sort.Order.desc("timestamp")));
-			List<Node> ud = template.find(pageQuery, Node.class, "InsUserData");
+			List<Node> ud = template.find(pageQuery, Node.class, udCollectionName);
 			return ud;
 		}
 	}
@@ -171,9 +177,9 @@ public class IndexController {
 		if(StrKit.isBlank(username)) {
 			return "请输入ins账号";
 		}else{
-			UserInfo ui = template.findOne(new Query(Criteria.where("username").is(username)), UserInfo.class, "InsUserList");
-			template.remove(new Query(Criteria.where("userId").is(ui.getId())), "InsUserData");
-			template.remove(new Query(Criteria.where("_id").is(username)), "InsUserList");
+			UserInfo ui = template.findOne(new Query(Criteria.where("username").is(username)), UserInfo.class, uiCollectionName);
+			template.remove(new Query(Criteria.where("userId").is(ui.getId())), udCollectionName);
+			template.remove(new Query(Criteria.where("_id").is(username)), uiCollectionName);
 		}
 		return "机器人已经开始工作，请稍等一会儿刷新页面查看";
 	}
@@ -264,7 +270,7 @@ public class IndexController {
 		Query pageQuery = new Query(Criteria.where("userId").is(userId))
 				.skip((pageNum - 1) * pageSize).limit(pageSize)
 				.with(Sort.by(Sort.Order.desc("timestamp")));
-		List<Node> ud = template.find(pageQuery, Node.class, "InsUserData");
+		List<Node> ud = template.find(pageQuery, Node.class, udCollectionName);
 		return ud;
 	}
 
@@ -276,13 +282,13 @@ public class IndexController {
 	@RequestMapping("/tasks")
 	public String tasks(Model model) {
 		List<Map<String, Object>> rs = new ArrayList<Map<String,Object>>();
-		List<UserInfo> list = template.findAll(UserInfo.class, "InsUserList");
+		List<UserInfo> list = template.findAll(UserInfo.class, uiCollectionName);
 		for (UserInfo userInfo : list) {
 			Map<String, Object> map = new HashMap<String, Object>();
-			Long sourceCount = template.count(new Query(Criteria.where("soureType").is("ins").and("uname").is(userInfo.getUsername())), Long.class, "InsUserData");
-			Long ghCdnCount = template.count(new Query(Criteria.where("soureType").is("gh_cdn").and("uname").is(userInfo.getUsername())), Long.class, "InsUserData");
-			Long validCdnCount = template.count(new Query(Criteria.where("soureType").is("invalid").and("uname").is(userInfo.getUsername())), Long.class, "InsUserData");
-			Long crCount = template.count(new Query(Criteria.where("soureType").is("cronRefresh").and("uname").is(userInfo.getUsername())), Long.class, "InsUserData");
+			Long sourceCount = template.count(new Query(Criteria.where("soureType").is("ins").and("uname").is(userInfo.getUsername())), Long.class, udCollectionName);
+			Long ghCdnCount = template.count(new Query(Criteria.where("soureType").is("gh_cdn").and("uname").is(userInfo.getUsername())), Long.class, udCollectionName);
+			Long validCdnCount = template.count(new Query(Criteria.where("soureType").is("invalid").and("uname").is(userInfo.getUsername())), Long.class, udCollectionName);
+			Long crCount = template.count(new Query(Criteria.where("soureType").is("cronRefresh").and("uname").is(userInfo.getUsername())), Long.class, udCollectionName);
 			String percent = NumberUtil.formatPercent((double)ghCdnCount/(double)(ghCdnCount+sourceCount+validCdnCount), 2);
 			map.put("total", (ghCdnCount+sourceCount+validCdnCount+crCount));
 			map.put("ghCdnCount", ghCdnCount);

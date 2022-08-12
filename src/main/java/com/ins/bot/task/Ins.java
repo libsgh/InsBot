@@ -72,9 +72,15 @@ public class Ins {
 	@Autowired
 	private InsUtil insUtil;
 
+	@Value("${ui_collection_name:InsUserList}")
+	private String uiCollectionName;
+
+	@Value("${ud_collection_name:InsUserData}")
+	private String udCollectionName;
+
 	public void run() {
 		try {
-			List<UserInfo> list = template.findAll(UserInfo.class, "InsUserList");
+			List<UserInfo> list = template.findAll(UserInfo.class, uiCollectionName);
 			for (UserInfo ui : list) {
 				this.excute(ui.getUsername(), false);
 			}
@@ -87,12 +93,12 @@ public class Ins {
 	public void excute(String username, boolean flag) {
 		Long time = System.currentTimeMillis();
 		UserInfo ui = insUtil.getUserInfo(username);
-		template.save(ui, "InsUserList");
+		template.save(ui, uiCollectionName);
 		if (flag) {
-			template.remove(new Query(Criteria.where("userId").is(ui.getId())), "InsUserData");
+			template.remove(new Query(Criteria.where("userId").is(ui.getId())), udCollectionName);
 		}
 		load(ui, flag);
-		template.save(ui, "InsUserList");
+		template.save(ui, uiCollectionName);
 		log.info("ID：" + ui.getUsername() + "，更新耗时：" + (System.currentTimeMillis() - time) + "ms");
 	}
 
@@ -101,21 +107,23 @@ public class Ins {
 		String lastId = "";
 		if (!flag) {
 			Node lastNode = template.findOne(new Query(Criteria.where("userId").is(ui.getId())).limit(1)
-					.with(Sort.by(Sort.Order.desc("timestamp"))), Node.class, "InsUserData");
+					.with(Sort.by(Sort.Order.desc("timestamp"))), Node.class, udCollectionName);
 			if(lastNode != null){
 				lastId = lastNode.getId();
 			}
 		}
-		log.info(lastId);
 		List<Node> nodes = insUtil.getUserFeed(ui.getUsername(), lastId);
+		int c = 0;
 		for (Node node : nodes) {
 			if (!flag) {
-				Node n = template.findById(node.getId(), Node.class, "InsUserData");
+				Node n = template.findById(node.getId(), Node.class, udCollectionName);
 				if (n != null) {
 					continue;
 				}
 			}
-			template.save(node, "InsUserData");
+			c++;
+			template.save(node, udCollectionName);
+			log.info("ID：" + ui.getUsername() + "，媒体进度：" + c + "/" + ui.getTiez());
 		}
 		ui.setLastTime(nodes.get(0).getTimestamp()*1000);
 	}
@@ -184,5 +192,43 @@ public class Ins {
 			log.error(e.getMessage(), e);
 		}
 		return null;
+	}
+
+	public void syncCacheUrl() {
+		List<UserInfo> list = template.findAll(UserInfo.class, uiCollectionName);
+		for (UserInfo ui : list) {
+			List<Node> nodes = template.find(new Query(Criteria.where("userId").is(ui.getId()).and("soureType").is("ins"))
+					.with(Sort.by(Sort.Order.desc("timestamp"))), Node.class, udCollectionName);
+			int c = 0;
+			for (Node node : nodes) {
+				if(!node.getIs_video()){
+					String cdnUrl = PicBed.upload(node.getDisplay_url());
+					node.setDisplay_url(cdnUrl);
+					List<Child> children = new ArrayList<>();
+					for (Child child : node.getChildren()) {
+						child.setVideo_url(PicBed.uploadVideo(child.getVideo_url()));
+						child.setDisplay_url(PicBed.upload(child.getDisplay_url()));
+						children.add(child);
+					}
+					node.setChildren(children);
+				}else{
+					String videoUrl = PicBed.upload(node.getVideo_url());
+					String cdnUrl = PicBed.upload(node.getDisplay_url());
+					node.setDisplay_url(cdnUrl);
+					node.setVideo_url(videoUrl);
+				}
+				List<ThumbnailResources> newSrcs = new ArrayList<>();
+				for (ThumbnailResources thumbnailResources : node.getSrcs()) {
+					thumbnailResources.setSrc(PicBed.upload(thumbnailResources.getSrc()));
+					newSrcs.add(thumbnailResources);
+				}
+				node.setSrcs(newSrcs);
+				node.setSoureType("cdn");
+				template.save(node, udCollectionName);
+				c++;
+				log.info("ID: " + ui.getUsername() + ", 进度："+ c + "/" + nodes.size());
+			}
+		}
+
 	}
 }

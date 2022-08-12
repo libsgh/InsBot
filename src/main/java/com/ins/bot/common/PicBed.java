@@ -61,6 +61,9 @@ public class PicBed {
 
 	public static String uploadVideo(String displayUrl) {
 		try {
+			if(StrUtil.isBlank(displayUrl)){
+				return displayUrl;
+			}
 			String fileName = getFileNameFromUrl(displayUrl);
 			if(videoUrlCache.containsKey(fileName)){
 				return videoUrlCache.get(fileName);

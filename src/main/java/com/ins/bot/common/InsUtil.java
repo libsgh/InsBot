@@ -142,7 +142,7 @@ public class InsUtil {
                         List<ImageVersionsMeta> images = image.getImage_versions2().getCandidates();
                         node.setIs_video(false);
                         node.setSrcs(buildThumbnailSources(images));
-                        node.setDisplay_url(PicBed.upload(images.get(0).getUrl()));
+                        node.setDisplay_url(images.get(0).getUrl());
                         node.setVideo_url("");
                         node.setChildren(ListUtil.list(false, new Child(node.getDisplay_url(), false, "")));
                     }else if(r.getMedia_type().equals("2")){
@@ -151,8 +151,8 @@ public class InsUtil {
                         List<ImageVersionsMeta> images = video.getImage_versions2().getCandidates();
                         node.setIs_video(true);
                         node.setSrcs(buildThumbnailSources(images));
-                        node.setDisplay_url(PicBed.upload(images.get(0).getUrl()));
-                        node.setVideo_url(PicBed.uploadVideo(video.getVideo_versions().get(0).getUrl()));
+                        node.setDisplay_url(images.get(0).getUrl());
+                        node.setVideo_url(video.getVideo_versions().get(0).getUrl());
                         node.setChildren(ListUtil.list(false, new Child(node.getDisplay_url(), true, node.getVideo_url())));
                     }else if(r.getMedia_type().equals("8")){
                         //轮播
@@ -166,16 +166,16 @@ public class InsUtil {
                                 //图片
                                 ImageCarouselItem ici = (ImageCarouselItem)i;
                                 Child child = new Child();
-                                child.setDisplay_url(PicBed.upload(ici.getImage_versions2().getCandidates().get(0).getUrl()));
+                                child.setDisplay_url(ici.getImage_versions2().getCandidates().get(0).getUrl());
                                 child.setIs_video(false);
                                 child.setVideo_url("");
                                 return child;
                             }else if(i.getMedia_type().equals("2")){
                                 VideoCarouselItem vci = (VideoCarouselItem)i;
                                 Child child = new Child();
-                                child.setDisplay_url(PicBed.upload(vci.getImage_versions2().getCandidates().get(0).getUrl()));
+                                child.setDisplay_url(vci.getImage_versions2().getCandidates().get(0).getUrl());
                                 child.setIs_video(true);
-                                child.setVideo_url(PicBed.uploadVideo(vci.getVideo_versions().get(0).getUrl()));
+                                child.setVideo_url(vci.getVideo_versions().get(0).getUrl());
                                 return child;
                             }
                             return new Child();
@@ -194,7 +194,7 @@ public class InsUtil {
     private List<ThumbnailResources> buildThumbnailSources(List<ImageVersionsMeta> images) {
         return images.stream().map(r -> {
             ThumbnailResources thumbnail = new ThumbnailResources();
-            thumbnail.setSrc(PicBed.upload(r.getUrl()));
+            thumbnail.setSrc(r.getUrl());
             thumbnail.setConfig_height(r.getHeight());
             thumbnail.setConfig_width(r.getWidth());
             return thumbnail;
@@ -205,7 +205,7 @@ public class InsUtil {
         if(carouselItem instanceof ImageCarouselItem){
             return ((ImageCarouselItem)carouselItem).getImage_versions2().getCandidates().stream().map(r -> {
                 ThumbnailResources thumbnail = new ThumbnailResources();
-                thumbnail.setSrc(PicBed.upload(r.getUrl()));
+                thumbnail.setSrc(r.getUrl());
                 thumbnail.setConfig_height(r.getHeight());
                 thumbnail.setConfig_width(r.getWidth());
                 return thumbnail;
@@ -213,7 +213,7 @@ public class InsUtil {
         } else {
             return ((VideoCarouselItem)carouselItem).getImage_versions2().getCandidates().stream().map(r -> {
                 ThumbnailResources thumbnail = new ThumbnailResources();
-                thumbnail.setSrc(PicBed.upload(r.getUrl()));
+                thumbnail.setSrc(r.getUrl());
                 thumbnail.setConfig_height(r.getHeight());
                 thumbnail.setConfig_width(r.getWidth());
                 return thumbnail;
